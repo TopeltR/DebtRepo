@@ -19,4 +19,5 @@ public class Event {
     private LocalDateTime created;
     private LocalDateTime closed;
     private List<Bill> bills;
+
 }
