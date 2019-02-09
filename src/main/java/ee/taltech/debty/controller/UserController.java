@@ -1,7 +1,7 @@
 package ee.taltech.debty.controller;
 
-import ee.taltech.debty.model.BankAccount;
-import ee.taltech.debty.model.User;
+import ee.taltech.debty.entity.BankAccount;
+import ee.taltech.debty.entity.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
