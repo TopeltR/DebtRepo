@@ -16,6 +16,7 @@ public class UserController {
         bankAccount.setNumber("123");
         User user = new User();
         user.setBankAccount(bankAccount);
+
         return List.of(user);
     }
 }
