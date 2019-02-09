@@ -7,8 +7,6 @@ import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import ee.taltech.debty.entity.Bill;
-
 @Data
 public class Event {
     @Id
@@ -19,5 +17,4 @@ public class Event {
     private LocalDateTime created;
     private LocalDateTime closed;
     private List<Bill> bills;
-
 }
