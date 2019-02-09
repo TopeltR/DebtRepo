@@ -11,6 +11,7 @@ import java.util.List;
 @Data
 @Entity
 public class Bill {
+
     @Id
     Long id;
     String title;
@@ -20,4 +21,5 @@ public class Bill {
     BigDecimal sum;
     Currency currency;
     List<BillPayment> billPayments;
+
 }
