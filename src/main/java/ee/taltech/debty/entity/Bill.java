@@ -25,5 +25,4 @@ public class Bill {
     Currency currency;
     @ManyToMany
     List<BillPayment> billPayments;
-
 }
