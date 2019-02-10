@@ -4,6 +4,8 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.List;
@@ -16,10 +18,13 @@ public class Bill {
     Long id;
     String title;
     String description;
+    @ManyToOne
     User buyer;
+    @ManyToMany
     List<User> users;
     BigDecimal sum;
     Currency currency;
+    @ManyToMany
     List<BillPayment> billPayments;
 
 }

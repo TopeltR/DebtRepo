@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 
 @Data
@@ -12,6 +13,7 @@ public class BillPayment {
 
     @Id
     Long id;
+    @ManyToOne
     User user;
     BigDecimal sum;
 

@@ -22,19 +22,14 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/users")
+    @GetMapping("/users/all")
     List<User> getUsers() {
-        BankAccount bankAccount = new BankAccount();
-        bankAccount.setName("lmao");
-        bankAccount.setNumber("123");
-        User user = new User();
-        user.setBankAccount(bankAccount);
-
-        return List.of(user);
+        return userService.getAllUsers();
     }
 
     @PostMapping("/users/register")
-    User registerUser(@Validated @RequestBody User user) {
+    User registerUser(@RequestBody User user) {
+        System.out.println(user);
         return userService.saveUser(user);
     }
 

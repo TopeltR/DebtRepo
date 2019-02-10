@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.util.Currency;
 
@@ -14,6 +15,8 @@ public class Debt {
     Long id;
     BigDecimal sum;
     Currency currency;
+    @ManyToOne
     User payer;
+    @ManyToOne
     User receiver;
 }
