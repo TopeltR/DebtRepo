@@ -27,7 +27,6 @@ public class EventController {
 
     @GetMapping("events/{id}")
     public Event getEventById(@PathVariable("id") Long id) {
-        Optional<Event> eventByIdOptional = eventService.getEventById(id);
-        return eventByIdOptional.orElseGet(Event::new);
+        return eventService.getEventById(id).orElseGet(Event::new);
     }
 }

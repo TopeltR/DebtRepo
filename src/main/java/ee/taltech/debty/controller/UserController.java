@@ -1,14 +1,9 @@
 package ee.taltech.debty.controller;
 
-import ee.taltech.debty.entity.BankAccount;
 import ee.taltech.debty.entity.User;
 import ee.taltech.debty.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,13 +18,17 @@ public class UserController {
     }
 
     @GetMapping("/users/all")
-    List<User> getUsers() {
+    public List<User> getUsers() {
         return userService.getAllUsers();
     }
 
+    @GetMapping("/users/{id}")
+    public User getUserById(@PathVariable("id") Long id) {
+        return userService.getUserById(id).orElseGet(User::new);
+    }
+
     @PostMapping("/users/register")
-    User registerUser(@RequestBody User user) {
-        System.out.println(user);
+    public User registerUser(@RequestBody User user) {
         return userService.saveUser(user);
     }
 
