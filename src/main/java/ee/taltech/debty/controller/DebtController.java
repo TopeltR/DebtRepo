@@ -28,4 +28,9 @@ public class DebtController {
     public Debt getDebtById(@PathVariable("id") Long id) {
         return debtService.getDebtById(id).orElseGet(Debt::new);
     }
+
+    @GetMapping("/debts/user/{userId}")
+    public List<Debt> getAllDebtsByUserId(@PathVariable("userId") Long userId) {
+        return debtService.getAllDebtsByUserId(userId);
+    }
 }

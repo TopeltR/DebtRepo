@@ -15,22 +15,22 @@ public class EventController {
         this.eventService = eventService;
     }
 
-    @GetMapping("events/all")
+    @GetMapping("/events/all")
     public List<Event> getAllEvents() {
         return eventService.getAllEvents();
     }
 
-    @PostMapping("events")
+    @PostMapping("/events")
     public Event addEvent(@RequestBody Event event) {
         return eventService.saveEvent(event);
     }
 
-    @GetMapping("events/{id}")
+    @GetMapping("/events/{id}")
     public Event getEventById(@PathVariable("id") Long id) {
         return eventService.getEventById(id).orElseGet(Event::new);
     }
 
-    @GetMapping("events/user/{userId}")
+    @GetMapping("/events/user/{userId}")
     public List<Event> getAllEventsByUserId(@PathVariable("userId") Long userId) {
         return eventService.getAllEventsByUserId(userId);
     }
