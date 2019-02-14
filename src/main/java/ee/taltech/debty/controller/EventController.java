@@ -29,4 +29,9 @@ public class EventController {
     public Event getEventById(@PathVariable("id") Long id) {
         return eventService.getEventById(id).orElseGet(Event::new);
     }
+
+    @GetMapping("events/user/{userId}")
+    public List<Event> getAllEventsByUserId(@PathVariable("userId") Long userId) {
+        return eventService.getAllEventsByUserId(userId);
+    }
 }
