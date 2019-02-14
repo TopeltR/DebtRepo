@@ -1,4 +1,4 @@
-package ee.taltech.debty.conf;
+package ee.taltech.debty.security.conf;
 
 import ee.taltech.debty.security.handlers.ApiAccessDeniedHandler;
 import ee.taltech.debty.security.handlers.ApiAuthFailureHandler;
