@@ -34,7 +34,7 @@ public class DebtService {
 
     public List<Debt> getAllDebtsByUserId(Long userId) {
         Optional<Person> userOptional = userService.getUserById(userId);
-        if (userOptional.isPresent()) return debtRepository.findAllByUserParticipating(userOptional.get());
+        if (userOptional.isPresent()) return debtRepository.findAllByPersonParticipating(userOptional.get());
         else return new ArrayList<>();
     }
 }
