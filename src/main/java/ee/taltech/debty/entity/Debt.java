@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Currency;
 
 @Data
@@ -14,11 +15,13 @@ import java.util.Currency;
 public class Debt {
     @Id
     @GeneratedValue
-    Long id;
-    BigDecimal sum;
-    Currency currency;
+    private Long id;
+    private BigDecimal sum;
+    private Currency currency;
+    private LocalDateTime created;
+    private LocalDateTime modified;
     @ManyToOne
-    User payer;
+    private User payer;
     @ManyToOne
-    User receiver;
+    private User receiver;
 }

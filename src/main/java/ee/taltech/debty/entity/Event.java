@@ -19,6 +19,7 @@ public class Event {
     private String title;
     private LocalDateTime created;
     private LocalDateTime closed;
+    private LocalDateTime modified;
     @ManyToMany
     private List<Bill> bills;
 }

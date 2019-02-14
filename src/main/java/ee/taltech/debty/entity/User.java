@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -20,6 +21,8 @@ public class User {
     private String email;
     private String firstName;
     private String lastName;
+    private LocalDateTime created;
+    private LocalDateTime modified;
     @OneToOne
     @Cascade(CascadeType.ALL)
     private BankAccount bankAccount;

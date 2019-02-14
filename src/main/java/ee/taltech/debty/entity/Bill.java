@@ -2,11 +2,9 @@ package ee.taltech.debty.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Currency;
 import java.util.List;
 
@@ -14,15 +12,18 @@ import java.util.List;
 @Entity
 public class Bill {
     @Id
-    Long id;
-    String title;
-    String description;
+    @GeneratedValue
+    private Long id;
+    private String title;
+    private String description;
+    private LocalDateTime created;
+    private LocalDateTime modified;
+    private BigDecimal sum;
+    private Currency currency;
     @ManyToOne
-    User buyer;
+    private User buyer;
     @ManyToMany
-    List<User> users;
-    BigDecimal sum;
-    Currency currency;
+    private List<User> users;
     @ManyToMany
-    List<BillPayment> billPayments;
+    private List<BillPayment> billPayments;
 }
