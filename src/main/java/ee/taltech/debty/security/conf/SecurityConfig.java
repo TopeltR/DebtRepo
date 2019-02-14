@@ -1,4 +1,4 @@
-package ee.taltech.debty.conf;
+package ee.taltech.debty.security.conf;
 
 import ee.taltech.debty.security.handlers.ApiAccessDeniedHandler;
 import ee.taltech.debty.security.handlers.ApiAuthFailureHandler;
@@ -27,14 +27,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsServiceImpl userDetailsService;
     private final ApiAuthFailureHandler failureHandler;
     private final ApiAuthSuccessHandler successHandler;
-    private final ApiAccessDeniedHandler accessDeniedHandler;
 
     public SecurityConfig(UserDetailsServiceImpl userDetailsService, ApiAuthFailureHandler failureHandler,
-                          ApiAuthSuccessHandler successHandler, ApiAccessDeniedHandler accessDeniedHandler) {
+                          ApiAuthSuccessHandler successHandler) {
         this.userDetailsService = userDetailsService;
         this.failureHandler = failureHandler;
         this.successHandler = successHandler;
-        this.accessDeniedHandler = accessDeniedHandler;
     }
 
     @Override
@@ -46,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(
-                (request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                (request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED)) // Access denied
                 .and()
                 .formLogin().permitAll()
                 .failureHandler(failureHandler)
