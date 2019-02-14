@@ -21,7 +21,7 @@ public class Debt {
     private LocalDateTime created;
     private LocalDateTime modified;
     @ManyToOne
-    private User payer;
+    private Person payer;
     @ManyToOne
-    private User receiver;
+    private Person receiver;
 }

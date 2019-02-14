@@ -1,7 +1,7 @@
 package ee.taltech.debty.controller;
 
-import ee.taltech.debty.entity.User;
-import ee.taltech.debty.model.UserDto;
+import ee.taltech.debty.entity.Person;
+import ee.taltech.debty.model.PersonDto;
 import ee.taltech.debty.security.service.SecurityService;
 import ee.taltech.debty.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,33 +27,33 @@ public class UserController {
 
     @GetMapping("/registration")
     public String registration(Model model) {
-        model.addAttribute("userForm", new User());
+        model.addAttribute("userForm", new Person());
 
         return "registration";
     }
 
     @PostMapping("/registration")
-    public ResponseEntity registration(@Validated @RequestBody UserDto userForm) {
+    public ResponseEntity registration(@Validated @RequestBody PersonDto userForm) {
 
         if (userService.checkIfEmailExist(userForm.getEmail())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
-        User user = userService.saveNewUser(userForm);
+        Person person = userService.saveNewUser(userForm);
 
         securityService.autologin(userForm.getEmail(), userForm.getPasswordConfirm());
 
-        return ResponseEntity.status(HttpStatus.OK).body(user);
+        return ResponseEntity.status(HttpStatus.OK).body(person);
     }
 
-    @GetMapping("/users/all")
-    List<User> getUsers() {
+    @GetMapping("/people/all")
+    List<Person> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/users/{id}")
-    User getUserById(@PathVariable("id") Long id) {
-        return userService.getUserById(id).orElseGet(User::new);
+    @GetMapping("/people/{id}")
+    Person getUserById(@PathVariable("id") Long id) {
+        return userService.getUserById(id).orElseGet(Person::new);
     }
 
 }

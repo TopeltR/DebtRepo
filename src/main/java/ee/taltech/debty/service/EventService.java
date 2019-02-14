@@ -1,7 +1,7 @@
 package ee.taltech.debty.service;
 
 import ee.taltech.debty.entity.Event;
-import ee.taltech.debty.entity.User;
+import ee.taltech.debty.entity.Person;
 import ee.taltech.debty.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ public class EventService {
     }
 
     public List<Event> getAllEventsByUserId(Long userId) {
-        Optional<User> userOptional = userService.getUserById(userId);
+        Optional<Person> userOptional = userService.getUserById(userId);
         if (userOptional.isPresent()) return eventRepository.findAllByUsersContaining(userOptional.get());
         else return new ArrayList<>();
     }

@@ -15,7 +15,7 @@ public class Event {
     @GeneratedValue
     private Long id;
     @ManyToMany
-    private List<User> users;
+    private List<Person> people;
     private String title;
     private LocalDateTime created;
     private LocalDateTime closed;

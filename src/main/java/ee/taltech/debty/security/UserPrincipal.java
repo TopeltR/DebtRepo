@@ -1,6 +1,6 @@
 package ee.taltech.debty.security;
 
-import ee.taltech.debty.entity.User;
+import ee.taltech.debty.entity.Person;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,20 +10,20 @@ import java.util.Collections;
 
 public class UserPrincipal implements UserDetails {
 
-    private transient User user;
+    private transient Person person;
 
-    UserPrincipal(User user) {
-        this.user = user;
+    UserPrincipal(Person person) {
+        this.person = person;
     }
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return person.getEmail();
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return person.getPassword();
     }
 
     @Override

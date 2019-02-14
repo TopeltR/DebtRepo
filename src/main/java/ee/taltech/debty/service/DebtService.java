@@ -1,7 +1,7 @@
 package ee.taltech.debty.service;
 
 import ee.taltech.debty.entity.Debt;
-import ee.taltech.debty.entity.User;
+import ee.taltech.debty.entity.Person;
 import ee.taltech.debty.repository.DebtRepository;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +33,7 @@ public class DebtService {
     }
 
     public List<Debt> getAllDebtsByUserId(Long userId) {
-        Optional<User> userOptional = userService.getUserById(userId);
+        Optional<Person> userOptional = userService.getUserById(userId);
         if (userOptional.isPresent()) return debtRepository.findAllByUserParticipating(userOptional.get());
         else return new ArrayList<>();
     }

@@ -1,7 +1,7 @@
 package ee.taltech.debty.service;
 
-import ee.taltech.debty.entity.User;
-import ee.taltech.debty.model.UserDto;
+import ee.taltech.debty.entity.Person;
+import ee.taltech.debty.model.PersonDto;
 import ee.taltech.debty.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,25 +22,25 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User saveNewUser(UserDto userDto) {
-        User user = new User();
-        user.setEmail(userDto.getEmail());
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setPassword(passwordEncoder.encode(userDto.getPasswordConfirm()));
-        userRepository.save(user);
-        return user;
+    public Person saveNewUser(PersonDto personDto) {
+        Person person = new Person();
+        person.setEmail(personDto.getEmail());
+        person.setFirstName(personDto.getFirstName());
+        person.setLastName(personDto.getLastName());
+        person.setPassword(passwordEncoder.encode(personDto.getPasswordConfirm()));
+        userRepository.save(person);
+        return person;
     }
 
-    public User getUserByEmail(String email) {
+    public Person getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    public List<User> getAllUsers() {
+    public List<Person> getAllUsers() {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUserById(Long id) {
+    public Optional<Person> getUserById(Long id) {
         return userRepository.findById(id);
     }
 

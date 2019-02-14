@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @ToString
-public class User {
+public class Person {
     @Id
     @GeneratedValue
     private Long id;

@@ -21,9 +21,9 @@ public class Bill {
     private BigDecimal sum;
     private Currency currency;
     @ManyToOne
-    private User buyer;
+    private Person buyer;
     @ManyToMany
-    private List<User> users;
+    private List<Person> people;
     @ManyToMany
     private List<BillPayment> billPayments;
 }

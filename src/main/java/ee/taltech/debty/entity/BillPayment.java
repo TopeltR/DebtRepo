@@ -16,7 +16,7 @@ public class BillPayment {
     @GeneratedValue
     private Long id;
     @ManyToOne
-    private User user;
+    private Person person;
     private BigDecimal sum;
     private LocalDateTime created;
     private LocalDateTime modified;
