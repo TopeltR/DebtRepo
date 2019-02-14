@@ -35,7 +35,7 @@ public class UserController {
     @PostMapping("/registration")
     public ResponseEntity registration(@Validated @RequestBody UserDto userForm) {
 
-        if (userService.emailExist(userForm.getEmail())) {
+        if (userService.checkIfEmailExist(userForm.getEmail())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 

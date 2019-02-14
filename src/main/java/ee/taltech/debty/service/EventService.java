@@ -35,7 +35,7 @@ public class EventService {
     }
 
     public List<Event> getAllEventsByUserId(Long userId) {
-        Optional<User> userOptional = userService.findById(userId);
+        Optional<User> userOptional = userService.getUserById(userId);
         if (userOptional.isPresent()) return eventRepository.findAllByUsersContaining(userOptional.get());
         else return new ArrayList<>();
     }

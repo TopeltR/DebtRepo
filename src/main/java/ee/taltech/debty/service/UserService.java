@@ -32,11 +32,7 @@ public class UserService {
         return user;
     }
 
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    public User findByEmail(String email) {
+    public User getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
@@ -48,7 +44,7 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public boolean emailExist(String email) {
+    public boolean checkIfEmailExist(String email) {
         return userRepository.findByEmail(email) != null;
     }
 }
