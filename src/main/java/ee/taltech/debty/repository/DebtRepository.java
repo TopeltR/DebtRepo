@@ -12,6 +12,6 @@ import java.util.List;
 public interface DebtRepository extends JpaRepository<Debt, Long> {
 
     @Query("SELECT d FROM Debt d WHERE d.payer = ?1 OR d.receiver = ?1")
-    List<Debt> findAllByUserParticipating(Person person);
+    List<Debt> findAllByPersonParticipating(Person person);
 
 }
