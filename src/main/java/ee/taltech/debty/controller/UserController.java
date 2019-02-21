@@ -25,14 +25,14 @@ public class UserController {
         this.securityService = securityService;
     }
 
-    @GetMapping("/registration")
+    @GetMapping("/register")
     public String registration(Model model) {
         model.addAttribute("userForm", new Person());
 
         return "registration";
     }
 
-    @PostMapping("/registration")
+    @PostMapping("/register")
     public ResponseEntity registration(@Validated @RequestBody PersonDto userForm) {
 
         if (userService.checkIfEmailExist(userForm.getEmail())) {
@@ -51,7 +51,13 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/people/{id}")
+    @GetMapping("/people/{email:[a-zA-Z]+@[a-zA-Z]+.[a-zA-Z]+}")
+    Person getUserByEmail(@PathVariable("email") String email) {
+        if (!userService.checkIfEmailExist(email)) return new Person();
+        return userService.getUserByEmail(email);
+    }
+
+    @GetMapping("/people/{id:[0-9]+}")
     Person getUserById(@PathVariable("id") Long id) {
         return userService.getUserById(id).orElseGet(Person::new);
     }
