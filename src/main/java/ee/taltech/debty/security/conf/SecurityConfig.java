@@ -42,8 +42,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable().cors().and()
                 .authorizeRequests()
+                .antMatchers("/register").permitAll()
                 .antMatchers("/registration/**").permitAll()
                 .antMatchers("/login").permitAll()
+                .antMatchers("/debts/all").authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(
@@ -73,7 +75,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("http://localhost:8000");
+        config.setAllowCredentials(true);
+        config.addAllowedHeader("http://localhost:8000");
+        config.addAllowedMethod("GET");
+        config.addAllowedMethod("PUT");
+        config.addAllowedMethod("POST");
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
 }

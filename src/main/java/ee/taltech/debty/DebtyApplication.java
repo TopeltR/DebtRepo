@@ -22,48 +22,50 @@ import java.util.List;
 @SpringBootApplication
 @RequiredArgsConstructor
 public class DebtyApplication {
-	private final PersonRepository personRepository;
-	private final EventRepository eventRepository;
-	private final PasswordEncoder passwordEncoder;
+    private final PersonRepository personRepository;
+    private final EventRepository eventRepository;
+    private final PasswordEncoder passwordEncoder;
 
-	public static void main(String[] args) {
-		SpringApplication.run(DebtyApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(DebtyApplication.class, args);
+    }
 
-	@Transactional
-	@EventListener(ApplicationReadyEvent.class)
-	public void onStartup() {
-		Person person = new Person();
-		person.setFirstName("Ingmar");
-		person.setLastName("Liibert");
-		person.setEmail("ingmar@liibert.ee");
-		person.setPassword(passwordEncoder.encode("ingmar"));
+    @Transactional
+    @EventListener(ApplicationReadyEvent.class)
+    public void onStartup() {
+        Person person = new Person();
+        person.setFirstName("Ingmar");
+        person.setLastName("Liibert");
+        person.setEmail("ingmar@liibert.ee");
+        String password = passwordEncoder.encode("ingmar");
+        person.setPassword(password);
 
-		BankAccount bankAccount = new BankAccount();
-		bankAccount.setName("Ingmar Liibert");
-		bankAccount.setNumber("EE123456789123");
+        BankAccount bankAccount = new BankAccount();
+        bankAccount.setName("Ingmar Liibert");
+        bankAccount.setNumber("EE123456789123");
 
-		personRepository.save(person);
+        personRepository.save(person);
 
-		Person p = new Person();
-		p.setFirstName("LALA");
-		p.setLastName("LALA");
-		p.setEmail("lala@lala.com");
-		p.setPassword(passwordEncoder.encode("ingmar"));
+        Person p = new Person();
+        p.setFirstName("LALA");
+        p.setLastName("LALA");
+        p.setEmail("lala@lala.com");
+        p.setPassword(password);
 
-		p.setBankAccount(bankAccount);
+        p.setBankAccount(bankAccount);
 
-		personRepository.save(p);
+        personRepository.save(p);
 
-		for (int i = 1; i < 10; i++) {
-			Event event = new Event();
-			event.setTitle("Event number " + i);
-			event.setOwner(p);
-			//event.setPeople(new ArrayList<>(Arrays.asList(p, person)));
-			eventRepository.save(event);
-		}
+        for (int i = 1; i < 10; i++) {
+            Event event = new Event();
+            event.setTitle("Event number " + i);
+            event.setOwner(p);
+            //event.setPeople(new ArrayList<>(Arrays.asList(p, person)));
+            eventRepository.save(event);
+        }
 
-		System.out.println(eventRepository.findAll());
-	}
+        System.out.println(eventRepository.findAll());
+        System.out.println("Password hash: " + password);
+    }
 }
 
