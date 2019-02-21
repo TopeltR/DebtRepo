@@ -2,7 +2,7 @@ package ee.taltech.debty.service;
 
 import ee.taltech.debty.entity.Person;
 import ee.taltech.debty.model.PersonDto;
-import ee.taltech.debty.repository.UserRepository;
+import ee.taltech.debty.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,12 +13,12 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
+    public UserService(PersonRepository personRepository, PasswordEncoder passwordEncoder) {
+        this.personRepository = personRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -28,23 +28,23 @@ public class UserService {
         person.setFirstName(personDto.getFirstName());
         person.setLastName(personDto.getLastName());
         person.setPassword(passwordEncoder.encode(personDto.getPasswordConfirm()));
-        userRepository.save(person);
+        personRepository.save(person);
         return person;
     }
 
     public Person getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return personRepository.findByEmail(email);
     }
 
     public List<Person> getAllUsers() {
-        return userRepository.findAll();
+        return personRepository.findAll();
     }
 
     public Optional<Person> getUserById(Long id) {
-        return userRepository.findById(id);
+        return personRepository.findById(id);
     }
 
     public boolean checkIfEmailExist(String email) {
-        return userRepository.findByEmail(email) != null;
+        return personRepository.findByEmail(email) != null;
     }
 }

@@ -1,7 +1,7 @@
 package ee.taltech.debty.security.service;
 
 import ee.taltech.debty.entity.Person;
-import ee.taltech.debty.repository.UserRepository;
+import ee.taltech.debty.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,17 +16,17 @@ import java.util.HashSet;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private final UserRepository userRepository;
+    private final PersonRepository personRepository;
 
     @Autowired
-    public UserDetailsServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserDetailsServiceImpl(PersonRepository personRepository) {
+        this.personRepository = personRepository;
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) {
-        Person person = userRepository.findByEmail(email);
+        Person person = personRepository.findByEmail(email);
 
         if (person == null) throw new UsernameNotFoundException("");
 

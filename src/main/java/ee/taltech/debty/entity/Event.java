@@ -16,6 +16,8 @@ public class Event {
     private Long id;
     @ManyToMany
     private List<Person> people;
+    @ManyToOne
+    private Person owner;
     private String title;
     private LocalDateTime created;
     private LocalDateTime closed;
