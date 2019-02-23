@@ -5,7 +5,6 @@ import ee.taltech.debty.service.EventService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class EventController {
