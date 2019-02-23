@@ -21,15 +21,8 @@ public class UserController {
     private final UserService userService;
     private final SecurityService securityService;
 
-    @GetMapping("/register")
-    public String registration(Model model) {
-        model.addAttribute("userForm", new Person());
-
-        return "registration";
-    }
-
     @PostMapping("/register")
-    public ResponseEntity registration(@Validated @RequestBody PersonDto userForm) {
+    public ResponseEntity register(@Validated @RequestBody PersonDto userForm) {
 
         if (userService.emailExists(userForm.getEmail())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -43,25 +36,25 @@ public class UserController {
     }
 
     @GetMapping("/users/all")
-    List<Person> getAllUsers() {
+    public List<Person> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/users/loggedin")
-    Person getLoggedInUser(Principal principal) {
+    @GetMapping("/users/loggedInUser")
+    public Person getLoggedInUser(Principal principal) {
         String email = principal.getName();
+        if (!userService.emailExists(email)) return null;
+        return userService.getUserByEmail(email);
+    }
+
+    @GetMapping("/users/email/{email}")
+    public Person getUserByEmail(@PathVariable("email") String email) {
         if (!userService.emailExists(email)) return new Person();
         return userService.getUserByEmail(email);
     }
 
-    @GetMapping("/users/{email:[a-zA-Z]+@[a-zA-Z]+.[a-zA-Z]+}")
-    Person getUserByEmail(@PathVariable("email") String email) {
-        if (!userService.emailExists(email)) return new Person();
-        return userService.getUserByEmail(email);
-    }
-
-    @GetMapping("/users/{id:[0-9]+}")
-    Person getUserById(@PathVariable("id") Long id) {
+    @GetMapping("/users/id/{id}")
+    public Person getUserById(@PathVariable("id") Long id) {
         return userService.getUserById(id).orElseGet(Person::new);
     }
 
