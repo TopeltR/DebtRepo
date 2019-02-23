@@ -7,10 +7,10 @@ import ee.taltech.debty.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Email;
 import java.security.Principal;
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class UserController {
     }
 
     @GetMapping("/users/email/{email}")
-    public Person getUserByEmail(@PathVariable("email") String email) {
+    public Person getUserByEmail(@Email @PathVariable("email") String email) {
         if (!userService.emailExists(email)) return new Person();
         return userService.getUserByEmail(email);
     }
