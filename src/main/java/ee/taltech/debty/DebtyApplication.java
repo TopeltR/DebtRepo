@@ -59,8 +59,9 @@ public class DebtyApplication {
         for (int i = 1; i < 10; i++) {
             Event event = new Event();
             event.setTitle("Event number " + i);
+            event.setDescription("this is a descrition.... Doggo ipsum shoob wow very biscit much ruin diet the neighborhood pupper long woofer, pupper long bois such treat. Puggo heck shibe very hand that feed shibe, wow very biscit such treat. Wrinkler fat boi shoober tungg, wrinkler.");
             event.setOwner(p);
-            //event.setPeople(new ArrayList<>(Arrays.asList(p, person)));
+            event.setPeople(new ArrayList<>(Arrays.asList(p, person)));
             eventRepository.save(event);
         }
 

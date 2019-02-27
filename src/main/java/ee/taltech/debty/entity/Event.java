@@ -19,6 +19,7 @@ public class Event {
     @ManyToOne
     private Person owner;
     private String title;
+    private String description;
     private LocalDateTime created;
     private LocalDateTime closed;
     private LocalDateTime modified;
