@@ -33,6 +33,6 @@ public class Person {
     @OneToMany
     private List<Event> events;
     @OneToMany
-    private Set<Person> friends;
+    private List<Person> friends;
 }
 

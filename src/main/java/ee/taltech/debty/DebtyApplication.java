@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 @EnableJpaRepositories
 @SpringBootApplication
@@ -49,6 +50,7 @@ public class DebtyApplication {
         person1.setLastName("Kasak");
         person1.setEmail("liine@kasak.ee");
         person1.setPassword(passwordEncoder.encode("liine"));
+
 
         Person person2 = new Person();
         person2.setFirstName("Rasmus");
@@ -82,7 +84,7 @@ public class DebtyApplication {
         person1.setBankAccount(bankAccount1);
         person2.setBankAccount(bankAccount2);
 
-
+        person2.setFriends(new ArrayList<>(Arrays.asList(person1, person, person3)));
 
         personRepository.save(person);
         personRepository.save(person1);
@@ -118,10 +120,7 @@ public class DebtyApplication {
         debt.setReceiver(person);
         debt.setSum(new BigDecimal(10));
 
-
-
-
-        System.out.println(personRepository.findAll());
+        System.out.println("list: " + person1.getFriends());
     }
 }
 

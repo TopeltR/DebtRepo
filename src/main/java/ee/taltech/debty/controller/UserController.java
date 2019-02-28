@@ -7,12 +7,14 @@ import ee.taltech.debty.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Email;
 import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -58,5 +60,18 @@ public class UserController {
         return userService.getUserById(id).orElseGet(Person::new);
     }
 
+    @GetMapping("/users/friends/id/{id}")
+    public List<Person> getAllUserFriends(@PathVariable("id") Long id) {
+        return userService.getAllFriendsById(id);
+    }
 
+    @PostMapping("/users/friends/add/{to_id}/{friend_id}")
+    public List<Person> addFriend(@PathVariable("to_id") Long id, @PathVariable("friend_id") Long friend_id) {
+        return userService.addFriendToUserById(id, friend_id);
+    }
+
+    @DeleteMapping("/users/friends/remove/{from_id}/{friend_id}")
+    public void removeFriend(@PathVariable("from_id") Long from_id, @PathVariable("friend_id") Long friend_id) {
+        userService.removeFriendById(from_id, friend_id);
+    }
 }
