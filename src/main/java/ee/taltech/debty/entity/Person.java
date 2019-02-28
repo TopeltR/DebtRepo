@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -31,5 +32,7 @@ public class Person {
     private BankAccount bankAccount;
     @OneToMany
     private List<Event> events;
+    @OneToMany
+    private Set<Person> friends;
 }
 
