@@ -16,6 +16,7 @@ public class Debt {
     @Id
     @GeneratedValue
     private Long id;
+    private String title;
     private BigDecimal sum;
     private Currency currency;
     private LocalDateTime created;

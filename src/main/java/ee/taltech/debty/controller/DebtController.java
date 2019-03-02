@@ -15,7 +15,7 @@ public class DebtController {
     }
 
     @PostMapping("/debts")
-    public Debt saveDebt(@RequestBody Debt debt) {
+    public Debt addDebt(@RequestBody Debt debt) {
         return debtService.saveDebt(debt);
     }
 

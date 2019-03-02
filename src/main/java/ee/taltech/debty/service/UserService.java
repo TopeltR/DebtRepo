@@ -28,8 +28,11 @@ public class UserService {
         person.setFirstName(personDto.getFirstName());
         person.setLastName(personDto.getLastName());
         person.setPassword(passwordEncoder.encode(personDto.getPasswordConfirm()));
-        personRepository.save(person);
-        return person;
+        return saveUser(person);
+    }
+
+    Person saveUser(Person person) {
+        return personRepository.save(person);
     }
 
     public Person getUserByEmail(String email) {

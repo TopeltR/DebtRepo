@@ -21,6 +21,9 @@ public class DebtService {
     }
 
     public Debt saveDebt(Debt debt) {
+        if (debt.getPayer().getId() == null) {
+            userService.saveUser(debt.getPayer());
+        }
         return debtRepository.save(debt);
     }
 
