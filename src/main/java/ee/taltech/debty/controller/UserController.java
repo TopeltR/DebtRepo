@@ -58,5 +58,18 @@ public class UserController {
         return userService.getUserById(id).orElseGet(Person::new);
     }
 
+    @GetMapping("/users/contacts/id/{id}")
+    public List<Person> getAllUserContacts(@PathVariable("id") Long id) {
+        return userService.getAllContactsById(id);
+    }
 
+    @PostMapping("/users/contacts/add/{to_id}/{contact_id}")
+    public List<Person> addContact(@PathVariable("to_id") Long id, @PathVariable("contact_id") Long contact_id) {
+        return userService.addContactToUserById(id, contact_id);
+    }
+
+    @DeleteMapping("/users/contacts/remove/{from_id}/{contact_id}")
+    public void removeContact(@PathVariable("from_id") Long from_id, @PathVariable("contact_id") Long contact_id) {
+        userService.removeContactById(from_id, contact_id);
+    }
 }

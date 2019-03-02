@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -47,7 +46,30 @@ public class UserService {
         return personRepository.findById(id);
     }
 
+    public List<Person> getAllContactsById(Long id) {
+        return personRepository.findById(id).isPresent() ? personRepository.findById(id).get().getFriends()
+                : new ArrayList<>();
+    }
+
+    public List<Person> addContactToUserById(Long person, Long contact) {
+        Person p = new Person();
+        Person f = new Person();
+        if (personRepository.findById(person).isPresent()) p = personRepository.findById(person).get();
+        if (personRepository.findById(contact).isPresent()) f = personRepository.findById(contact).get();
+        p.getFriends().add(f);
+        return p.getFriends();
+    }
+
     public boolean emailExists(String email) {
         return personRepository.findByEmail(email) != null;
+    }
+
+    public void removeContactById(Long from_id, Long contact_id) {
+        if (personRepository.findById(from_id).isPresent() && personRepository.findById(contact_id).isPresent()) {
+            Person person = personRepository.findById(from_id).get();
+            Person from = personRepository.findById(contact_id).get();
+            person.getFriends().remove(from);
+        }
+
     }
 }
