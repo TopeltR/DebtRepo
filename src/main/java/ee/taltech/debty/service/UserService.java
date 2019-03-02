@@ -43,16 +43,16 @@ public class UserService {
         return personRepository.findById(id);
     }
 
-    public List<Person> getAllFriendsById(Long id) {
+    public List<Person> getAllContactsById(Long id) {
         return personRepository.findById(id).isPresent() ? personRepository.findById(id).get().getFriends()
                 : new ArrayList<>();
     }
 
-    public List<Person> addFriendToUserById(Long person, Long friend) {
+    public List<Person> addContactToUserById(Long person, Long contact) {
         Person p = new Person();
         Person f = new Person();
         if (personRepository.findById(person).isPresent()) p = personRepository.findById(person).get();
-        if (personRepository.findById(friend).isPresent()) f = personRepository.findById(friend).get();
+        if (personRepository.findById(contact).isPresent()) f = personRepository.findById(contact).get();
         p.getFriends().add(f);
         return p.getFriends();
     }
@@ -61,10 +61,10 @@ public class UserService {
         return personRepository.findByEmail(email) != null;
     }
 
-    public void removeFriendById(Long from_id, Long friend_id) {
-        if (personRepository.findById(from_id).isPresent() && personRepository.findById(friend_id).isPresent()) {
+    public void removeContactById(Long from_id, Long contact_id) {
+        if (personRepository.findById(from_id).isPresent() && personRepository.findById(contact_id).isPresent()) {
             Person person = personRepository.findById(from_id).get();
-            Person from = personRepository.findById(friend_id).get();
+            Person from = personRepository.findById(contact_id).get();
             person.getFriends().remove(from);
         }
 

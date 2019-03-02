@@ -7,14 +7,12 @@ import ee.taltech.debty.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Email;
 import java.security.Principal;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -61,17 +59,17 @@ public class UserController {
     }
 
     @GetMapping("/users/friends/id/{id}")
-    public List<Person> getAllUserFriends(@PathVariable("id") Long id) {
-        return userService.getAllFriendsById(id);
+    public List<Person> getAllUserContacts(@PathVariable("id") Long id) {
+        return userService.getAllContactsById(id);
     }
 
-    @PostMapping("/users/friends/add/{to_id}/{friend_id}")
-    public List<Person> addFriend(@PathVariable("to_id") Long id, @PathVariable("friend_id") Long friend_id) {
-        return userService.addFriendToUserById(id, friend_id);
+    @PostMapping("/users/friends/add/{to_id}/{contact_id}")
+    public List<Person> addContact(@PathVariable("to_id") Long id, @PathVariable("contact_id") Long contact_id) {
+        return userService.addContactToUserById(id, contact_id);
     }
 
-    @DeleteMapping("/users/friends/remove/{from_id}/{friend_id}")
-    public void removeFriend(@PathVariable("from_id") Long from_id, @PathVariable("friend_id") Long friend_id) {
-        userService.removeFriendById(from_id, friend_id);
+    @DeleteMapping("/users/friends/remove/{from_id}/{contact_id}")
+    public void removeContact(@PathVariable("from_id") Long from_id, @PathVariable("contact_id") Long contact_id) {
+        userService.removeContactById(from_id, contact_id);
     }
 }
