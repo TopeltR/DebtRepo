@@ -1,9 +1,7 @@
 package ee.taltech.debty;
 
-import ee.taltech.debty.entity.BankAccount;
-import ee.taltech.debty.entity.Debt;
-import ee.taltech.debty.entity.Event;
-import ee.taltech.debty.entity.Person;
+import ee.taltech.debty.entity.*;
+import ee.taltech.debty.repository.BillRepository;
 import ee.taltech.debty.repository.DebtRepository;
 import ee.taltech.debty.repository.EventRepository;
 import ee.taltech.debty.repository.PersonRepository;
@@ -17,10 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @EnableJpaRepositories
 @SpringBootApplication
@@ -29,6 +25,7 @@ public class DebtyApplication {
     private final PersonRepository personRepository;
     private final EventRepository eventRepository;
     private final DebtRepository debtRepository;
+    private final BillRepository billRepository;
     private final PasswordEncoder passwordEncoder;
 
     public static void main(String[] args) {
@@ -97,6 +94,16 @@ public class DebtyApplication {
         event.setDescription("Reede õhtune kinoseansi kogu arveldus. Teeme nii, et igaüks paneb siia oma maksumused kirja :)");
         event.setOwner(person);
         event.setPeople(new ArrayList<>(Arrays.asList(person,person1,person2)));
+
+        Bill bill1 = new Bill();
+        bill1.setTitle("piletid");
+        bill1.setBuyer(person1);
+        bill1.setCreator(person);
+        bill1.setPeople(Arrays.asList(person, person1));
+        bill1.setSum(new BigDecimal(11.50));
+        bill1.setCreatedAt(LocalDateTime.now());
+        billRepository.save(bill1);
+        event.setBills(Collections.singletonList(bill1));
 
         Event event1 = new Event();
         event1.setTitle("Kardiga rallimine");

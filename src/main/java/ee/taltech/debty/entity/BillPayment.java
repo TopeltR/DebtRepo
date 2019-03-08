@@ -18,6 +18,6 @@ public class BillPayment {
     @ManyToOne
     private Person person;
     private BigDecimal sum;
-    private LocalDateTime created;
-    private LocalDateTime modified;
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
 }

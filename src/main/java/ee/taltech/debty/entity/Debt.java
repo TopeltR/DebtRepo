@@ -19,8 +19,8 @@ public class Debt {
     private String title;
     private BigDecimal sum;
     private Currency currency;
-    private LocalDateTime created;
-    private LocalDateTime modified;
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
     @ManyToOne
     private Person payer;
     @ManyToOne
