@@ -19,8 +19,6 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
 
 @EnableJpaRepositories
 @SpringBootApplication
@@ -28,7 +26,6 @@ import java.util.Set;
 public class DebtyApplication {
     private final PersonRepository personRepository;
     private final EventRepository eventRepository;
-    private final DebtRepository debtRepository;
     private final PasswordEncoder passwordEncoder;
 
     public static void main(String[] args) {
@@ -109,7 +106,7 @@ public class DebtyApplication {
         event2.setTitle("Lauamänguõhtu");
         event2.setDescription("Vaatame jooksvalt, kes mida toob aga põhimõtteliselt siin saame mugavalt järge pidada ostudel");
         event2.setOwner(person1);
-        event2.setPeople(new ArrayList<>(Arrays.asList(person1,person2,person4)));
+        event2.setPeople(new ArrayList<>(Arrays.asList(person,person1,person2,person4)));
 
         eventRepository.save(event);
         eventRepository.save(event1);

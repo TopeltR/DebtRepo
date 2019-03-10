@@ -23,6 +23,10 @@ public class Event {
     private LocalDateTime created;
     private LocalDateTime closed;
     private LocalDateTime modified;
-    @ManyToMany
+    @OneToMany
     private List<Bill> bills;
+
+    public void addBill(Bill bill) {
+        bills.add(bill);
+    }
 }
