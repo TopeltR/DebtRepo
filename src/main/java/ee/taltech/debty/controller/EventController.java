@@ -1,5 +1,6 @@
 package ee.taltech.debty.controller;
 
+import ee.taltech.debty.entity.Debt;
 import ee.taltech.debty.entity.Event;
 import ee.taltech.debty.service.EventService;
 import org.springframework.web.bind.annotation.*;
@@ -32,5 +33,10 @@ public class EventController {
     @GetMapping("/events/user/{userId}")
     public List<Event> getAllEventsByUserId(@PathVariable("userId") Long userId) {
         return eventService.getAllEventsByUserId(userId);
+    }
+
+    @GetMapping("/events/{eventId}/debts")
+    public List<Debt> getDistributedDebtCalculation(@PathVariable("eventId") Long eventId) {
+        return eventService.calculateDistributedDebts(eventId);
     }
 }

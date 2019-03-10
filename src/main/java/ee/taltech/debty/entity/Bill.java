@@ -1,11 +1,6 @@
 package ee.taltech.debty.entity;
 
-import lombok.Builder;
 import lombok.Data;
-import lombok.Generated;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -31,6 +26,6 @@ public class Bill {
     private Person buyer;
     @ManyToMany
     private List<Person> people;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<BillPayment> billPayments;
 }

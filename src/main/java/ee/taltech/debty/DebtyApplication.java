@@ -15,8 +15,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @EnableJpaRepositories
 @SpringBootApplication
@@ -102,8 +105,42 @@ public class DebtyApplication {
         bill1.setPeople(Arrays.asList(person, person1));
         bill1.setSum(new BigDecimal(11.50));
         bill1.setCreatedAt(LocalDateTime.now());
+        List<BillPayment> billPayments1 = new ArrayList<>();
+        BillPayment billPayment1;
+        BigDecimal sum1 = bill1.getSum().divide(new BigDecimal(bill1.getPeople().size()), 2, RoundingMode.HALF_EVEN);
+        for (Person personX : bill1.getPeople()) {
+            billPayment1 = new BillPayment();
+            billPayment1.setPerson(personX);
+            billPayment1.setSum(sum1);
+            billPayments1.add(billPayment1);
+        }
+        bill1.setBillPayments(billPayments1);
+
         billRepository.save(bill1);
-        event.setBills(Collections.singletonList(bill1));
+
+
+        Bill bill2 = new Bill();
+        bill2.setTitle("piletid");
+        bill2.setBuyer(person);
+        bill2.setCreator(person);
+        bill2.setPeople(Arrays.asList(person, person1, person2));
+        bill2.setSum(new BigDecimal(15.90));
+        bill2.setCreatedAt(LocalDateTime.now());
+        List<BillPayment> billPayments2 = new ArrayList<>();
+        BillPayment billPayment2;
+        BigDecimal sum2 = bill2.getSum().divide(new BigDecimal(bill2.getPeople().size()), 2, RoundingMode.HALF_EVEN);
+
+        for (Person personX : bill2.getPeople()) {
+            billPayment2 = new BillPayment();
+            billPayment2.setPerson(personX);
+            billPayment2.setSum(sum2);
+            billPayments2.add(billPayment2);
+        }
+        bill2.setBillPayments(billPayments2);
+
+        billRepository.save(bill2);
+
+        event.setBills(Arrays.asList(bill1, bill2));
 
         Event event1 = new Event();
         event1.setTitle("Kardiga rallimine");
@@ -122,10 +159,8 @@ public class DebtyApplication {
         eventRepository.save(event1);
         eventRepository.save(event2);
 
-        Debt debt = new Debt();
-        debt.setPayer(person2);
-        debt.setReceiver(person);
-        debt.setSum(new BigDecimal(10));
+        Debt debt = Debt.builder().payer(person2).receiver(person).sum(new BigDecimal(10)).build();
+        debtRepository.save(debt);
 
         System.out.println("list: " + person1.getFriends());
     }

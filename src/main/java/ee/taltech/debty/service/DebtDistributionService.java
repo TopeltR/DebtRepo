@@ -1,0 +1,41 @@
+package ee.taltech.debty.service;
+
+import ee.taltech.debty.entity.*;
+import ee.taltech.debty.model.graph.Graph;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class DebtDistributionService {
+
+    List<Debt> calculateDebtDistribution(Event event) {
+        Graph graph = generateGraphFromBills(event);
+        graph.optimizeDebts();
+        return graph.getAllDebts();
+    }
+
+    private Graph generateGraphFromBills(Event event) {
+        Graph graph = new Graph(event.getPeople());
+
+        Person to;
+        Person from;
+        BigDecimal sum;
+
+        for (Bill bill : event.getBills()) {
+
+            to = bill.getBuyer();
+            for (BillPayment billPayment : bill.getBillPayments()) {
+                from = billPayment.getPerson();
+                sum = billPayment.getSum();
+                graph.addRelation(sum, from, to);
+            }
+        }
+
+        return graph;
+    }
+
+}
