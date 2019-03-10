@@ -20,7 +20,7 @@ public class Event {
     private Person owner;
     private String title;
     private String description;
-    private LocalDateTime created;
+    private LocalDateTime createdAt;
     private LocalDateTime closed;
     private LocalDateTime modified;
     @OneToMany
