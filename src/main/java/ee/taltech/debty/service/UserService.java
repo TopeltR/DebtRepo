@@ -1,26 +1,23 @@
 package ee.taltech.debty.service;
 
+import ee.taltech.debty.entity.BankAccount;
 import ee.taltech.debty.entity.Person;
 import ee.taltech.debty.model.PersonDto;
 import ee.taltech.debty.repository.PersonRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public UserService(PersonRepository personRepository, PasswordEncoder passwordEncoder) {
-        this.personRepository = personRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    private final PersonRepository personRepository;
 
     public Person saveNewUser(PersonDto personDto) {
         Person person = new Person();
@@ -48,5 +45,16 @@ public class UserService {
         return personRepository.findByEmail(email) != null;
     }
 
+    public void addBankAccountForUser(BankAccount bankAccount, Long personId) {
 
+        Person person = personRepository.findById(personId).orElseGet(Person::new);
+        if (!person.getId().equals(personId)) return;
+
+        bankAccount.setCreatedAt(LocalDateTime.now());
+        bankAccount.setModified(LocalDateTime.now());
+
+        person.setModifiedAt(LocalDateTime.now());
+        person.setBankAccount(bankAccount);
+        personRepository.save(person);
+    }
 }

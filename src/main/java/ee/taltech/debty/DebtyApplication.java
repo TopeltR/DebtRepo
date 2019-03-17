@@ -74,16 +74,11 @@ public class DebtyApplication {
         bankAccount.setName("Ingmar Liibert");
         bankAccount.setNumber("EE123456789123");
 
-        BankAccount bankAccount1 = new BankAccount();
-        bankAccount1.setName("Liine Kasak");
-        bankAccount1.setNumber("EE123456789123");
-
         BankAccount bankAccount2 = new BankAccount();
         bankAccount2.setName("Rasmus Rüngenen");
         bankAccount2.setNumber("EE123456789123");
 
         person.setBankAccount(bankAccount);
-        person1.setBankAccount(bankAccount1);
         person2.setBankAccount(bankAccount2);
 
 

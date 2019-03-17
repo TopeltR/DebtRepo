@@ -1,5 +1,7 @@
 package ee.taltech.debty.controller;
 
+import ee.taltech.debty.entity.BankAccount;
+import ee.taltech.debty.entity.Event;
 import ee.taltech.debty.entity.Person;
 import ee.taltech.debty.model.PersonDto;
 import ee.taltech.debty.security.service.SecurityService;
@@ -58,5 +60,8 @@ public class UserController {
         return userService.getUserById(id).orElseGet(Person::new);
     }
 
-
+    @PostMapping("/users/bankAccount/{userId}")
+    public void addBankAccountForUser(@PathVariable("userId") Long userId, @RequestBody BankAccount bankAccount) {
+        userService.addBankAccountForUser(bankAccount, userId);
+    }
 }
