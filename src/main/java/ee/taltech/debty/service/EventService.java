@@ -1,5 +1,6 @@
 package ee.taltech.debty.service;
 
+import ee.taltech.debty.entity.Bill;
 import ee.taltech.debty.entity.Debt;
 import ee.taltech.debty.entity.Event;
 import ee.taltech.debty.entity.Person;
@@ -53,5 +54,21 @@ public class EventService {
         debtService.saveDebts(debtDistributionService.calculateDebtDistribution(event));
         event.setClosed(LocalDateTime.now());
         eventRepository.save(event);
+    }
+
+    public Event addOrUpdateBill(Long eventId, Bill bill) {
+        Optional<Event> eventById = getEventById(eventId);
+        if (!eventById.isPresent()) return null;
+
+        Event event = eventById.get();
+        event.updateBill(bill);
+        Optional<Bill> billOptional = event.getBills().stream().filter(b -> b.getId().equals(bill.getId())).findFirst();
+        if (billOptional.isPresent()) {
+            Bill b = billOptional.get();
+            event.getBills().remove(b);
+        }
+        event.addBill(bill);
+
+        return saveEvent(event);
     }
 }
