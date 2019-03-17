@@ -20,12 +20,14 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Currency;
 import java.util.List;
 
 @EnableJpaRepositories
 @SpringBootApplication
 @RequiredArgsConstructor
 public class DebtyApplication {
+
     private final PersonRepository personRepository;
     private final EventRepository eventRepository;
     private final DebtRepository debtRepository;
@@ -86,7 +88,6 @@ public class DebtyApplication {
         person1.setBankAccount(bankAccount1);
         person2.setBankAccount(bankAccount2);
 
-        person2.setFriends(new ArrayList<>(Arrays.asList(person1, person, person3)));
 
         personRepository.save(person);
         personRepository.save(person1);
@@ -156,10 +157,34 @@ public class DebtyApplication {
         eventRepository.save(event1);
         eventRepository.save(event2);
 
-        Debt debt = Debt.builder().payer(person2).receiver(person).sum(new BigDecimal(10)).build();
-        debtRepository.save(debt);
+        Debt debt = Debt.builder()
+                .title("MIKS?")
+                .createdAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.of(2006,9,7,15,42))
+                .payer(person2)
+                .receiver(person)
+                .currency(Currency.getInstance("EUR"))
+                .sum(new BigDecimal(10)).build();
+        Debt debt1 = Debt.builder()
+                .title("TESTIKENE")
+                .createdAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.of(1997,9,7,15,42))
+                .payer(person1)
+                .receiver(person2)
+                .currency(Currency.getInstance("EUR"))
+                .sum(new BigDecimal(10)).build();
+        Debt debt2 = Debt.builder()
+                .title("TÄSTIKENE")
+                .payer(person)
+                .modifiedAt(LocalDateTime.of(2019,9,7,21,42))
+                .receiver(person2)
+                .currency(Currency.getInstance("EUR"))
+                .sum(new BigDecimal(100)).build();
 
-        System.out.println("list: " + person1.getFriends());
+        debtRepository.save(debt);
+        debtRepository.save(debt1);
+        debtRepository.save(debt2);
+
     }
 }
 
