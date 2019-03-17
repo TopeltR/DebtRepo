@@ -27,7 +27,9 @@ public class ContactService {
         contactRepository.findAllByFrom(person).forEach(contact -> contactList.add(contact.getTo()));
 
         List<Person> availableContacts = new ArrayList<>();
-        userList.forEach(user -> {if (!contactList.contains(user)) availableContacts.add(user);});
+        userList.forEach(user -> {
+            if (!contactList.contains(user)) availableContacts.add(user);
+        });
         return availableContacts;
     }
 
@@ -48,31 +50,46 @@ public class ContactService {
 
     public List<Person> getAllContacts(Person person) {
         List<Contact> contacts = contactRepository.findAllByFrom(person);
-        System.out.println(contactRepository.findAllByFrom(person));
-        return contacts.stream().filter(Contact::isAccepted).map(Contact::getTo).collect(Collectors.toList());
+        contacts.addAll(contactRepository.findAllByTo(person));
+        List<Person> contactPersonList = new ArrayList<>();
+        contactPersonList.addAll(
+                contacts
+                .stream()
+                .filter(contact -> contact.isAccepted() && contact.getFrom() == person)
+                .map(Contact::getTo)
+                .collect(Collectors.toList()));
+        contactPersonList.addAll(
+                contacts
+                .stream()
+                .filter(contact -> contact.isAccepted() && contact.getTo() == person)
+                .map(Contact::getFrom)
+                .collect(Collectors.toList()));
+        return contactPersonList;
     }
 
     public void acceptContact(Long toPerson) {
         Optional<Person> person = userService.getUserById(toPerson);
-        Optional<Contact> optionalContact = null;
+        Optional<Contact> optionalContact;
         if (person.isPresent()) {
-            optionalContact = contactRepository.findByTo(person.get());
-        }
-        if (optionalContact.isPresent()) {
-            optionalContact.get().setAccepted(true);
-            contactRepository.save(optionalContact.get());
-            //contactRepository.save(new Contact(optionalContact.get().getFrom(),optionalContact.get().getTo(),true));
+            optionalContact = contactRepository.findByFrom(person.get());
+            if (optionalContact.isPresent()) {
+                optionalContact.get().setAccepted(true);
+                contactRepository.save(optionalContact.get());
+            }
         }
     }
 
-    public List<Person> getWaitingList(Long id) {
+    public List<Person> getIncomingRequests(Long id) {
         Optional<Person> person = userService.getUserById(id);
         List<Contact> contacts;
-        if(person.isPresent()) {
-           contacts = contactRepository.findAllByFrom(person.get());
-           return contacts.stream().filter(i -> !i.isAccepted()).map(Contact::getTo).collect(Collectors.toList());
+        if (person.isPresent()) {
+            contacts = contactRepository.findAllByTo(person.get());
+            return contacts
+                    .stream()
+                    .filter(i -> !i.isAccepted())
+                    .map(Contact::getFrom)
+                    .collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
-
 }

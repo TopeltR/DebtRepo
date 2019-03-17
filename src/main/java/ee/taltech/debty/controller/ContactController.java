@@ -47,7 +47,7 @@ public class ContactController {
 
     @GetMapping("/contact/waiting/{id}")
     public List<Person> getAllWaitingContacts(@PathVariable("id") Long id) {
-        return contactService.getWaitingList(id);
+        return contactService.getIncomingRequests(id);
     }
 
     @PostMapping("/contact/accept/{toId}")

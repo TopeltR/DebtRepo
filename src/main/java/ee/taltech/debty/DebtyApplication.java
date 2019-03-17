@@ -84,7 +84,6 @@ public class DebtyApplication {
         person1.setBankAccount(bankAccount1);
         person2.setBankAccount(bankAccount2);
 
-        person2.setFriends(new ArrayList<>(Arrays.asList(person1, person, person3)));
 
         personRepository.save(person);
         personRepository.save(person1);
@@ -162,7 +161,6 @@ public class DebtyApplication {
         Debt debt = Debt.builder().payer(person2).receiver(person).sum(new BigDecimal(10)).build();
         debtRepository.save(debt);
 
-        System.out.println("list: " + person1.getFriends());
     }
 }
 
