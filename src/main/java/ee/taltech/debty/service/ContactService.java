@@ -6,7 +6,8 @@ import ee.taltech.debty.repository.ContactRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
+
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -93,12 +94,15 @@ public class ContactService {
         }
         return new ArrayList<>();
     }
-
+    @Transactional
     public void removeContactById(Long fromId, Long contactId) {
         Optional<Person> fromPerson = userService.getUserById(fromId);
         Optional<Person> toPerson = userService.getUserById(contactId);
 
         fromPerson.ifPresent(contactRepository::removeContactByFrom);
+        fromPerson.ifPresent(contactRepository::removeContactByTo);
         toPerson.ifPresent(contactRepository::removeContactByTo);
+        toPerson.ifPresent(contactRepository::removeContactByFrom);
+
     }
 }
