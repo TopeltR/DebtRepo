@@ -7,6 +7,7 @@ import ee.taltech.debty.service.BillService;
 import ee.taltech.debty.service.EventService;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,5 +56,10 @@ public class EventController {
     @GetMapping("/events/{eventId}/debts")
     public List<Debt> getDistributedDebtCalculation(@PathVariable("eventId") Long eventId) {
         return eventService.calculateDistributedDebts(eventId);
+    }
+
+    @PostMapping("/events/{eventId}/close")
+    public void closeEvent(@PathVariable("eventId") Long eventId, Principal principal) {
+        eventService.closeEvent(eventId, principal.getName());
     }
 }

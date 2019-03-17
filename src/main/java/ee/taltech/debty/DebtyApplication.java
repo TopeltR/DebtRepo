@@ -25,6 +25,7 @@ import java.util.List;
 @SpringBootApplication
 @RequiredArgsConstructor
 public class DebtyApplication {
+
     private final PersonRepository personRepository;
     private final EventRepository eventRepository;
     private final DebtRepository debtRepository;
