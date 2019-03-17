@@ -33,8 +33,8 @@ public class ContactController {
     }
 
     @DeleteMapping("/contact/remove/{fromId}/{contactId}")
-    public void removeContact(@PathVariable("fromId") Long from_id, @PathVariable("contactId") Long contact_id) {
-        // contactService.removeContactById(from_id, contact_id);
+    public void removeContact(@PathVariable("fromId") Long fromId, @PathVariable("contactId") Long contactId) {
+         contactService.removeContactById(fromId, contactId);
     }
 
     @GetMapping("/contact/id/{id}")
