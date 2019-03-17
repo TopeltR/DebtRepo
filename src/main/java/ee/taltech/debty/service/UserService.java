@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -27,11 +28,8 @@ public class UserService {
         person.setFirstName(personDto.getFirstName());
         person.setLastName(personDto.getLastName());
         person.setPassword(passwordEncoder.encode(personDto.getPasswordConfirm()));
-        return saveUser(person);
-    }
-
-    Person saveUser(Person person) {
-        return personRepository.save(person);
+        personRepository.save(person);
+        return person;
     }
 
     public Person getUserByEmail(String email) {
@@ -46,8 +44,12 @@ public class UserService {
         return personRepository.findById(id);
     }
 
-    public List<Person> getAllContactsById(Long id) {
-        return personRepository.findById(id).isPresent() ? personRepository.findById(id).get().getFriends()
+    public boolean emailExists(String email) {
+        return personRepository.findByEmail(email) != null;
+    }
+
+   /* public List<Person> getAllContactsById(Long id) {
+        return personRepository.findById(id).isPresent() ? personRepository.findById(id).get().getContacts()
                 : new ArrayList<>();
     }
 
@@ -56,20 +58,32 @@ public class UserService {
         Person f = new Person();
         if (personRepository.findById(person).isPresent()) p = personRepository.findById(person).get();
         if (personRepository.findById(contact).isPresent()) f = personRepository.findById(contact).get();
-        p.getFriends().add(f);
-        return p.getFriends();
+        p.getContacts().add(f);
+        personRepository.save(p);
+        return p.getContacts();
     }
 
-    public boolean emailExists(String email) {
-        return personRepository.findByEmail(email) != null;
-    }
+
 
     public void removeContactById(Long from_id, Long contact_id) {
         if (personRepository.findById(from_id).isPresent() && personRepository.findById(contact_id).isPresent()) {
             Person person = personRepository.findById(from_id).get();
             Person from = personRepository.findById(contact_id).get();
-            person.getFriends().remove(from);
+            person.getContacts().remove(from);
+            personRepository.save(person);
         }
-
     }
+
+    public List<Person> getAddableContacts(Long id) {
+        List<Person> newContacts = new ArrayList<>();
+        Optional<Person> personOptional = getUserById(id);
+        if (personOptional.isPresent()) {
+            Person person = personOptional.get();
+            List<Person> friends = person.getContacts();
+            List<Person> people = getAllUsers();
+            newContacts = people.stream().filter(p -> !friends.contains(p)).collect(Collectors.toList());
+            newContacts.remove(person);
+        }
+        return newContacts;
+    } */
 }

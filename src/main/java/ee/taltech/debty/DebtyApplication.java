@@ -19,8 +19,7 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.Collections;
 
 @EnableJpaRepositories
 @SpringBootApplication
@@ -84,7 +83,8 @@ public class DebtyApplication {
         person1.setBankAccount(bankAccount1);
         person2.setBankAccount(bankAccount2);
 
-        person2.setFriends(new ArrayList<>(Arrays.asList(person1, person, person3)));
+        //person2.setContacts(new ArrayList<>(Collections.singletonList(person1)));
+        //person1.setContacts(new ArrayList<>(Collections.singletonList(person2)));
 
         personRepository.save(person);
         personRepository.save(person1);
@@ -120,7 +120,9 @@ public class DebtyApplication {
         debt.setReceiver(person);
         debt.setSum(new BigDecimal(10));
 
-        System.out.println("list: " + person1.getFriends());
+        debtRepository.save(debt);
+
+
     }
 }
 

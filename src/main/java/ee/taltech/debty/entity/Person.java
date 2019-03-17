@@ -1,5 +1,8 @@
 package ee.taltech.debty.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.annotations.Cascade;
@@ -32,7 +35,6 @@ public class Person {
     private BankAccount bankAccount;
     @OneToMany
     private List<Event> events;
-    @OneToMany
-    private List<Person> friends;
+
 }
 
