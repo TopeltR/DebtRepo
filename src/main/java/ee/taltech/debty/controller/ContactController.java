@@ -27,13 +27,13 @@ public class ContactController {
         return contactService.getAllAvailableContacts(person);
     }
 
-    @PostMapping("/contact/add/{to_id}/{contact_id}")
-    public void addContact(@PathVariable("to_id") Long id, @PathVariable("contact_id") Long contactId) {
+    @PostMapping("/contact/add/{toId}/{contactId}")
+    public void addContact(@PathVariable("toId") Long id, @PathVariable("contactId") Long contactId) {
         contactService.addContact(id, contactId);
     }
 
-    @DeleteMapping("/contact/remove/{from_id}/{contact_id}")
-    public void removeContact(@PathVariable("from_id") Long from_id, @PathVariable("contact_id") Long contact_id) {
+    @DeleteMapping("/contact/remove/{fromId}/{contactId}")
+    public void removeContact(@PathVariable("fromId") Long from_id, @PathVariable("contactId") Long contact_id) {
         // contactService.removeContactById(from_id, contact_id);
     }
 

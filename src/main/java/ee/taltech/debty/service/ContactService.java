@@ -54,16 +54,16 @@ public class ContactService {
         List<Person> contactPersonList = new ArrayList<>();
         contactPersonList.addAll(
                 contacts
-                .stream()
-                .filter(contact -> contact.isAccepted() && contact.getFrom() == person)
-                .map(Contact::getTo)
-                .collect(Collectors.toList()));
+                        .stream()
+                        .filter(contact -> contact.isAccepted() && contact.getFrom() == person)
+                        .map(Contact::getTo)
+                        .collect(Collectors.toList()));
         contactPersonList.addAll(
                 contacts
-                .stream()
-                .filter(contact -> contact.isAccepted() && contact.getTo() == person)
-                .map(Contact::getFrom)
-                .collect(Collectors.toList()));
+                        .stream()
+                        .filter(contact -> contact.isAccepted() && contact.getTo() == person)
+                        .map(Contact::getFrom)
+                        .collect(Collectors.toList()));
         return contactPersonList;
     }
 
