@@ -16,14 +16,16 @@ public class Bill {
     private Long id;
     private String title;
     private String description;
-    private LocalDateTime created;
-    private LocalDateTime modified;
+    @ManyToOne
+    private Person creator;
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
     private BigDecimal sum;
     private Currency currency;
     @ManyToOne
     private Person buyer;
     @ManyToMany
     private List<Person> people;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<BillPayment> billPayments;
 }

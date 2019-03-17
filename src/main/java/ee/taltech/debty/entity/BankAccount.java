@@ -10,6 +10,6 @@ import java.time.LocalDateTime;
 public class BankAccount {
     private String number;
     private String name;
-    private LocalDateTime created;
+    private LocalDateTime createdAt;
     private LocalDateTime modified;
 }

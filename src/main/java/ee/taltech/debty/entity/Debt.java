@@ -1,6 +1,9 @@
 package ee.taltech.debty.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +15,9 @@ import java.util.Currency;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Debt {
     @Id
     @GeneratedValue
@@ -19,8 +25,8 @@ public class Debt {
     private String title;
     private BigDecimal sum;
     private Currency currency;
-    private LocalDateTime created;
-    private LocalDateTime modified;
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
     @ManyToOne
     private Person payer;
     @ManyToOne

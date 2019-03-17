@@ -8,6 +8,7 @@ import java.util.List;
 
 @RestController
 public class DebtController {
+
     private final DebtService debtService;
 
     public DebtController(DebtService debtService) {

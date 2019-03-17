@@ -20,9 +20,13 @@ public class Event {
     private Person owner;
     private String title;
     private String description;
-    private LocalDateTime created;
+    private LocalDateTime createdAt;
     private LocalDateTime closed;
     private LocalDateTime modified;
-    @ManyToMany
+    @OneToMany
     private List<Bill> bills;
+
+    public void addBill(Bill bill) {
+        bills.add(bill);
+    }
 }

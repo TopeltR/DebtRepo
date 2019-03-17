@@ -1,9 +1,10 @@
 package ee.taltech.debty.service;
 
+import ee.taltech.debty.entity.Debt;
 import ee.taltech.debty.entity.Event;
 import ee.taltech.debty.entity.Person;
 import ee.taltech.debty.repository.EventRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,16 +12,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class EventService {
 
-    private final EventRepository eventRepository;
     private final UserService userService;
-
-    @Autowired
-    public EventService(EventRepository eventRepository, UserService userService) {
-        this.eventRepository = eventRepository;
-        this.userService = userService;
-    }
+    private final EventRepository eventRepository;
+    private final DebtDistributionService debtDistributionService;
 
     public Event saveEvent(Event event) {
         return eventRepository.save(event);
@@ -38,5 +35,11 @@ public class EventService {
         Optional<Person> userOptional = userService.getUserById(userId);
         if (userOptional.isPresent()) return eventRepository.findAllByPeopleContaining(userOptional.get());
         else return new ArrayList<>();
+    }
+
+    public List<Debt> calculateDistributedDebts(Long eventId) {
+        Event event = getEventById(eventId).orElseGet(Event::new);
+        if (!eventId.equals(event.getId())) return null;
+        return debtDistributionService.calculateDebtDistribution(event);
     }
 }

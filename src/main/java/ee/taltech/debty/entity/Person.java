@@ -5,16 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.ToString;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.repository.Modifying;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
@@ -27,9 +21,7 @@ public class Person {
     private String password;
     private String firstName;
     private String lastName;
-    @CreatedDate
-    private LocalDateTime createdAt;
-    @LastModifiedDate
+    private LocalDateTime created;
     private LocalDateTime modifiedAt;
     @Embedded
     private BankAccount bankAccount;
