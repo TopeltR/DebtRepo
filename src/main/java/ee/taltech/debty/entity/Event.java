@@ -23,10 +23,18 @@ public class Event {
     private LocalDateTime createdAt;
     private LocalDateTime closed;
     private LocalDateTime modified;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Bill> bills;
 
     public void addBill(Bill bill) {
         bills.add(bill);
+    }
+
+    public void updateBill(Bill bill) {
+        for (Bill b : bills) {
+            if (b.getId().equals(bill.getId())) {
+
+            }
+        }
     }
 }

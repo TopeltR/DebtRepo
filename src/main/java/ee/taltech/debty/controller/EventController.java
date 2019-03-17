@@ -36,15 +36,8 @@ public class EventController {
     }
 
     @PostMapping("/events/{id}/bills")
-    public Bill addBill(@PathVariable("id") Long id, @RequestBody Bill bill) {
-        Optional<Event> eventById = eventService.getEventById(id);
-        if (!eventById.isPresent()) return null;
-        Event event = eventById.get();
-
-        bill = billService.saveBill(bill);
-        event.addBill(bill);
-        eventService.saveEvent(event);
-        return bill;
+    public Event addBill(@PathVariable("id") Long id, @RequestBody Bill bill) {
+        return eventService.addOrUpdateBill(id, bill);
     }
 
     @GetMapping("/events/user/{userId}")

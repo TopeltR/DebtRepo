@@ -5,6 +5,7 @@ import ee.taltech.debty.repository.BillRepository;
 import ee.taltech.debty.repository.DebtRepository;
 import ee.taltech.debty.repository.EventRepository;
 import ee.taltech.debty.repository.PersonRepository;
+import ee.taltech.debty.service.BillService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,6 +31,7 @@ public class DebtyApplication {
     private final DebtRepository debtRepository;
     private final BillRepository billRepository;
     private final PasswordEncoder passwordEncoder;
+    private final BillService billService;
 
     public static void main(String[] args) {
         SpringApplication.run(DebtyApplication.class, args);
@@ -116,9 +118,6 @@ public class DebtyApplication {
         }
         bill1.setBillPayments(billPayments1);
 
-        billRepository.save(bill1);
-
-
         Bill bill2 = new Bill();
         bill2.setTitle("piletid");
         bill2.setBuyer(person);
@@ -138,8 +137,6 @@ public class DebtyApplication {
         }
         bill2.setBillPayments(billPayments2);
 
-        billRepository.save(bill2);
-
         event.setBills(Arrays.asList(bill1, bill2));
 
         Event event1 = new Event();
@@ -155,7 +152,7 @@ public class DebtyApplication {
         event2.setOwner(person1);
         event2.setPeople(new ArrayList<>(Arrays.asList(person,person1,person2,person4)));
 
-        eventRepository.save(event);
+        Event save = eventRepository.save(event);
         eventRepository.save(event1);
         eventRepository.save(event2);
 
