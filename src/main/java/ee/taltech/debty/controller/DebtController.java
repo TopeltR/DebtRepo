@@ -16,7 +16,7 @@ public class DebtController {
     }
 
     @PostMapping("/debts")
-    public Debt addDebt(@RequestBody Debt debt) {
+    public Debt saveDebt(@RequestBody Debt debt) {
         return debtService.saveDebt(debt);
     }
 
@@ -33,5 +33,10 @@ public class DebtController {
     @GetMapping("/debts/user/{userId}")
     public List<Debt> getAllDebtsByUserId(@PathVariable("userId") Long userId) {
         return debtService.getAllDebtsByUserId(userId);
+    }
+
+    @DeleteMapping("/debts/{id}")
+    public void deleteDebt(@PathVariable("id") Long id) {
+        debtService.deleteDebt(id);
     }
 }

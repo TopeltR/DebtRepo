@@ -1,7 +1,6 @@
 package ee.taltech.debty.entity;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,6 +8,9 @@ import java.util.List;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ToString
 public class Person {
     @Id
@@ -24,7 +26,6 @@ public class Person {
     private BankAccount bankAccount;
     @OneToMany
     private List<Event> events;
-    @OneToMany
-    private List<Person> friends;
+
 }
 

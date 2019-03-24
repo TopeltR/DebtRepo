@@ -5,6 +5,7 @@ import ee.taltech.debty.repository.BillRepository;
 import ee.taltech.debty.repository.DebtRepository;
 import ee.taltech.debty.repository.EventRepository;
 import ee.taltech.debty.repository.PersonRepository;
+import ee.taltech.debty.service.BillService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,17 +20,20 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Currency;
 import java.util.List;
 
 @EnableJpaRepositories
 @SpringBootApplication
 @RequiredArgsConstructor
 public class DebtyApplication {
+
     private final PersonRepository personRepository;
     private final EventRepository eventRepository;
     private final DebtRepository debtRepository;
     private final BillRepository billRepository;
     private final PasswordEncoder passwordEncoder;
+    private final BillService billService;
 
     public static void main(String[] args) {
         SpringApplication.run(DebtyApplication.class, args);
@@ -66,27 +70,23 @@ public class DebtyApplication {
         Person person4 = new Person();
         person4.setFirstName("Kalle");
         person4.setLastName("Kaalikas");
+        person4.setEmail("kalle@kaalikas.ee");
         person4.setPassword(passwordEncoder.encode("kalle"));
 
         BankAccount bankAccount = new BankAccount();
         bankAccount.setName("Ingmar Liibert");
         bankAccount.setNumber("EE123456789123");
 
-        BankAccount bankAccount1 = new BankAccount();
-        bankAccount1.setName("Liine Kasak");
-        bankAccount1.setNumber("EE123456789123");
-
         BankAccount bankAccount2 = new BankAccount();
         bankAccount2.setName("Rasmus Rüngenen");
         bankAccount2.setNumber("EE123456789123");
 
         person.setBankAccount(bankAccount);
-        person1.setBankAccount(bankAccount1);
         person2.setBankAccount(bankAccount2);
 
-        person2.setFriends(new ArrayList<>(Arrays.asList(person1, person, person3)));
 
         personRepository.save(person);
+
         personRepository.save(person1);
         personRepository.save(person2);
         personRepository.save(person3);
@@ -116,9 +116,6 @@ public class DebtyApplication {
         }
         bill1.setBillPayments(billPayments1);
 
-        billRepository.save(bill1);
-
-
         Bill bill2 = new Bill();
         bill2.setTitle("piletid");
         bill2.setBuyer(person);
@@ -138,8 +135,6 @@ public class DebtyApplication {
         }
         bill2.setBillPayments(billPayments2);
 
-        billRepository.save(bill2);
-
         event.setBills(Arrays.asList(bill1, bill2));
 
         Event event1 = new Event();
@@ -147,22 +142,58 @@ public class DebtyApplication {
         event1.setDescription("Saame kord kuus kokku ning vaatame, kes kõige kiirem on rajal. Teeme standardiks Laagri" +
                 "kardiraja, seal hea mõnus sõita. Mul seal käpp ka sees");
         event1.setOwner(person2);
-        event1.setPeople(new ArrayList<>(Arrays.asList(person,person1,person2, person3,person4)));
+        event1.setPeople(new ArrayList<>(Arrays.asList(person,person1,person2, person3)));
 
         Event event2 = new Event();
         event2.setTitle("Lauamänguõhtu");
         event2.setDescription("Vaatame jooksvalt, kes mida toob aga põhimõtteliselt siin saame mugavalt järge pidada ostudel");
         event2.setOwner(person1);
-        event2.setPeople(new ArrayList<>(Arrays.asList(person,person1,person2,person4)));
+        event2.setPeople(new ArrayList<>(Arrays.asList(person,person1,person2)));
 
-        eventRepository.save(event);
+        Event save = eventRepository.save(event);
         eventRepository.save(event1);
         eventRepository.save(event2);
 
-        Debt debt = Debt.builder().payer(person2).receiver(person).sum(new BigDecimal(10)).build();
-        debtRepository.save(debt);
+        Debt debt = Debt.builder()
+                .title("MIKS?")
+                .createdAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.of(2006,9,7,15,42))
+                .payer(person2)
+                .receiver(person)
+                .owner(person)
+                .currency(Currency.getInstance("EUR"))
+                .sum(new BigDecimal(10)).build();
+        Debt debt1 = Debt.builder()
+                .title("TESTIKENE")
+                .createdAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.of(1997,9,7,15,42))
+                .payer(person1)
+                .receiver(person2)
+                .owner(person1)
+                .currency(Currency.getInstance("EUR"))
+                .sum(new BigDecimal(10)).build();
+        Debt debt2 = Debt.builder()
+                .title("TÄSTIKENE")
+                .payer(person)
+                .owner(person2)
+                .modifiedAt(LocalDateTime.of(2019,9,7,21,42))
+                .receiver(person2)
+                .currency(Currency.getInstance("EUR"))
+                .sum(new BigDecimal(100)).build();
+        Debt debt3 = Debt.builder()
+                .payer(person)
+                .title("ayo")
+                .createdAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.of(2019,9,7,21,43))
+                .receiver(person3)
+                .currency(Currency.getInstance("EUR"))
+                .sum(new BigDecimal(100)).build();
 
-        System.out.println("list: " + person1.getFriends());
+        debtRepository.save(debt);
+        debtRepository.save(debt1);
+        debtRepository.save(debt2);
+        debtRepository.save(debt3);
+
     }
 }
 

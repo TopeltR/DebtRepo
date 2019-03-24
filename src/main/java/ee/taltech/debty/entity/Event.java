@@ -23,6 +23,6 @@ public class Event {
     private LocalDateTime createdAt;
     private LocalDateTime closed;
     private LocalDateTime modified;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Bill> bills;
 }

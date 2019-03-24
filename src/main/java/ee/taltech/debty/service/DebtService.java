@@ -5,6 +5,8 @@ import ee.taltech.debty.entity.Person;
 import ee.taltech.debty.repository.DebtRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,10 +26,13 @@ public class DebtService {
         if (debt.getPayer().getId() == null) {
             userService.saveUser(debt.getPayer());
         }
+        if (debt.getCreatedAt() == null) debt.setCreatedAt(LocalDateTime.now());
+        debt.setModifiedAt(LocalDateTime.now());
         return debtRepository.save(debt);
     }
 
-    public void saveDebts(List<Debt> debts) {
+    void saveDebts(List<Debt> debts) {
+        debts.forEach(d -> d.setModifiedAt(LocalDateTime.now()));
         debtRepository.saveAll(debts);
     }
 
@@ -43,5 +48,10 @@ public class DebtService {
         Optional<Person> userOptional = userService.getUserById(userId);
         if (userOptional.isPresent()) return debtRepository.findAllByPersonParticipating(userOptional.get());
         else return new ArrayList<>();
+    }
+
+    public void deleteDebt(Long id) {
+        Optional<Debt> debtOptional = getDebtById(id);
+        debtOptional.ifPresent(debtRepository::delete);
     }
 }

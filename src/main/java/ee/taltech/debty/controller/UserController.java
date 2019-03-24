@@ -1,5 +1,7 @@
 package ee.taltech.debty.controller;
 
+import ee.taltech.debty.entity.BankAccount;
+import ee.taltech.debty.entity.Event;
 import ee.taltech.debty.entity.Person;
 import ee.taltech.debty.model.PersonDto;
 import ee.taltech.debty.security.service.SecurityService;
@@ -40,7 +42,7 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/users/loggedInUser")
+    @GetMapping("/users/loggedIn")
     public Person getLoggedInUser(Principal principal) {
         String email = principal.getName();
         if (!userService.emailExists(email)) return null;
@@ -58,18 +60,12 @@ public class UserController {
         return userService.getUserById(id).orElseGet(Person::new);
     }
 
-    @GetMapping("/users/contacts/id/{id}")
-    public List<Person> getAllUserContacts(@PathVariable("id") Long id) {
-        return userService.getAllContactsById(id);
+    @PutMapping("/users")
+    public Person updateUser(@RequestBody PersonDto user) {
+        return userService.updateUser(user);
     }
-
-    @PostMapping("/users/contacts/add/{to_id}/{contact_id}")
-    public List<Person> addContact(@PathVariable("to_id") Long id, @PathVariable("contact_id") Long contact_id) {
-        return userService.addContactToUserById(id, contact_id);
-    }
-
-    @DeleteMapping("/users/contacts/remove/{from_id}/{contact_id}")
-    public void removeContact(@PathVariable("from_id") Long from_id, @PathVariable("contact_id") Long contact_id) {
-        userService.removeContactById(from_id, contact_id);
+    @PostMapping("/users/bankAccount/{userId}")
+    public void addBankAccountForUser(@PathVariable("userId") Long userId, @RequestBody BankAccount bankAccount) {
+        userService.addBankAccountForUser(bankAccount, userId);
     }
 }

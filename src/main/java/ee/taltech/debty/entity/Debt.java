@@ -31,4 +31,7 @@ public class Debt {
     private Person payer;
     @ManyToOne
     private Person receiver;
+    @ManyToOne
+    private Person owner;
+    private boolean accepted = false;
 }
