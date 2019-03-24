@@ -1,11 +1,9 @@
 package ee.taltech.debty;
 
 import ee.taltech.debty.entity.*;
-import ee.taltech.debty.repository.BillRepository;
-import ee.taltech.debty.repository.DebtRepository;
-import ee.taltech.debty.repository.EventRepository;
-import ee.taltech.debty.repository.PersonRepository;
+import ee.taltech.debty.repository.*;
 import ee.taltech.debty.service.BillService;
+import ee.taltech.debty.service.ContactService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -34,6 +32,8 @@ public class DebtyApplication {
     private final BillRepository billRepository;
     private final PasswordEncoder passwordEncoder;
     private final BillService billService;
+    private final ContactRepository contactRepository;
+    private final ContactService contactService;
 
     public static void main(String[] args) {
         SpringApplication.run(DebtyApplication.class, args);
@@ -191,6 +191,18 @@ public class DebtyApplication {
         debtRepository.save(debt2);
         debtRepository.save(debt3);
 
+
+        contactService.addContact(person.getId(), person1.getId());
+        contactService.acceptContact(person.getId());
+
+        contactService.addContact(person1.getId(), person2.getId());
+        contactService.acceptContact(person1.getId());
+
+        contactService.addContact(person2.getId(), person.getId());
+        contactService.acceptContact(person2.getId());
+
+        contactService.addContact(person1.getId(), person.getId());
+        contactService.acceptContact(person1.getId());
     }
 }
 
