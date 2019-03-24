@@ -38,16 +38,15 @@ public class ContactService {
     public void addContact(Long personId1, Long personId2) {
         Optional<Person> personOptional1 = userService.getUserById(personId1);
         Optional<Person> personOptional2 = userService.getUserById(personId2);
-        Person person1 = null;
-        Person person2 = null;
-        if (personOptional1.isPresent()) person1 = personOptional1.get();
-        if (personOptional2.isPresent()) person2 = personOptional2.get();
-        if (person1 == null || person2 == null) return;
-        Contact contact = new Contact();
-        contact.setFrom(person1);
-        contact.setTo(person2);
-        contact.setAccepted(false);
-        contactRepository.save(contact);
+        if (personOptional1.isPresent() && personOptional2.isPresent()){
+            Person person1 = personOptional1.get();
+            Person person2 = personOptional2.get();
+            Contact contact = new Contact();
+            contact.setFrom(person1);
+            contact.setTo(person2);
+            contact.setAccepted(false);
+            contactRepository.save(contact);
+        }
     }
 
     public List<Person> getAllContacts(Person person) {
