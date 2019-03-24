@@ -34,4 +34,9 @@ public class DebtController {
     public List<Debt> getAllDebtsByUserId(@PathVariable("userId") Long userId) {
         return debtService.getAllDebtsByUserId(userId);
     }
+
+    @DeleteMapping("/debts/{id}")
+    public void deleteDebt(@PathVariable("id") Long id) {
+        debtService.deleteDebt(id);
+    }
 }

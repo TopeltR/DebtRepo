@@ -22,11 +22,12 @@ public class DebtService {
     }
 
     public Debt saveDebt(Debt debt) {
+        if (debt.getCreatedAt() == null) debt.setCreatedAt(LocalDateTime.now());
         debt.setModifiedAt(LocalDateTime.now());
         return debtRepository.save(debt);
     }
 
-    public void saveDebts(List<Debt> debts) {
+    void saveDebts(List<Debt> debts) {
         debts.forEach(d -> d.setModifiedAt(LocalDateTime.now()));
         debtRepository.saveAll(debts);
     }
@@ -43,5 +44,10 @@ public class DebtService {
         Optional<Person> userOptional = userService.getUserById(userId);
         if (userOptional.isPresent()) return debtRepository.findAllByPersonParticipating(userOptional.get());
         else return new ArrayList<>();
+    }
+
+    public void deleteDebt(Long id) {
+        Optional<Debt> debtOptional = getDebtById(id);
+        debtOptional.ifPresent(debtRepository::delete);
     }
 }
