@@ -19,12 +19,25 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final PersonRepository personRepository;
 
-    public Person saveNewUser(PersonDto personDto) {
-        Person person = new Person();
-        person.setEmail(personDto.getEmail());
+    private void setParamsFromDto(Person person, PersonDto personDto) {
+        if (getUserByEmail(personDto.getEmail()) == null) {
+            person.setEmail(personDto.getEmail());
+        }
         person.setFirstName(personDto.getFirstName());
         person.setLastName(personDto.getLastName());
-        person.setPassword(passwordEncoder.encode(personDto.getPasswordConfirm()));
+        if (personDto.getPassword() != null) {
+            person.setPassword(passwordEncoder.encode(personDto.getPasswordConfirm()));
+        }
+    }
+
+    private Person toUser(PersonDto personDto) {
+        Person person = new Person();
+        setParamsFromDto(person, personDto);
+        return person;
+    }
+
+    public Person saveNewUser(PersonDto personDto) {
+        Person person = toUser(personDto);
         personRepository.save(person);
         return person;
     }
@@ -56,5 +69,14 @@ public class UserService {
         person.setModifiedAt(LocalDateTime.now());
         person.setBankAccount(bankAccount);
         personRepository.save(person);
+    }
+    public Person updateUser(PersonDto personDto) {
+        Optional<Person> personOptional = getUserById(personDto.getId());
+        if (personOptional.isPresent()) {
+            Person person = personOptional.get();
+            setParamsFromDto(person, personDto);
+            return personRepository.save(person);
+        }
+        return null;
     }
 }

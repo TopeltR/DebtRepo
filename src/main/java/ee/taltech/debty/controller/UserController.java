@@ -42,7 +42,7 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/users/loggedInUser")
+    @GetMapping("/users/loggedIn")
     public Person getLoggedInUser(Principal principal) {
         String email = principal.getName();
         if (!userService.emailExists(email)) return null;
@@ -60,6 +60,10 @@ public class UserController {
         return userService.getUserById(id).orElseGet(Person::new);
     }
 
+    @PutMapping("/users")
+    public Person updateUser(@RequestBody PersonDto user) {
+        return userService.updateUser(user);
+    }
     @PostMapping("/users/bankAccount/{userId}")
     public void addBankAccountForUser(@PathVariable("userId") Long userId, @RequestBody BankAccount bankAccount) {
         userService.addBankAccountForUser(bankAccount, userId);
