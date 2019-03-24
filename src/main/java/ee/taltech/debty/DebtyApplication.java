@@ -70,6 +70,7 @@ public class DebtyApplication {
         Person person4 = new Person();
         person4.setFirstName("Kalle");
         person4.setLastName("Kaalikas");
+        person4.setEmail("kalle@kaalikas.ee");
         person4.setPassword(passwordEncoder.encode("kalle"));
 
         BankAccount bankAccount = new BankAccount();
@@ -85,6 +86,7 @@ public class DebtyApplication {
 
 
         personRepository.save(person);
+
         personRepository.save(person1);
         personRepository.save(person2);
         personRepository.save(person3);
@@ -140,13 +142,13 @@ public class DebtyApplication {
         event1.setDescription("Saame kord kuus kokku ning vaatame, kes kõige kiirem on rajal. Teeme standardiks Laagri" +
                 "kardiraja, seal hea mõnus sõita. Mul seal käpp ka sees");
         event1.setOwner(person2);
-        event1.setPeople(new ArrayList<>(Arrays.asList(person,person1,person2, person3,person4)));
+        event1.setPeople(new ArrayList<>(Arrays.asList(person,person1,person2, person3)));
 
         Event event2 = new Event();
         event2.setTitle("Lauamänguõhtu");
         event2.setDescription("Vaatame jooksvalt, kes mida toob aga põhimõtteliselt siin saame mugavalt järge pidada ostudel");
         event2.setOwner(person1);
-        event2.setPeople(new ArrayList<>(Arrays.asList(person,person1,person2,person4)));
+        event2.setPeople(new ArrayList<>(Arrays.asList(person,person1,person2)));
 
         Event save = eventRepository.save(event);
         eventRepository.save(event1);
@@ -178,10 +180,19 @@ public class DebtyApplication {
                 .receiver(person2)
                 .currency(Currency.getInstance("EUR"))
                 .sum(new BigDecimal(100)).build();
+        Debt debt3 = Debt.builder()
+                .payer(person)
+                .title("ayo")
+                .createdAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.of(2019,9,7,21,43))
+                .receiver(person3)
+                .currency(Currency.getInstance("EUR"))
+                .sum(new BigDecimal(100)).build();
 
         debtRepository.save(debt);
         debtRepository.save(debt1);
         debtRepository.save(debt2);
+        debtRepository.save(debt3);
 
     }
 }
