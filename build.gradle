@@ -14,6 +14,10 @@ apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
+test {
+	useJUnitPlatform()
+}
+
 group = 'ee.taltech'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
@@ -32,4 +36,5 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testCompile "junit:junit:4.+"
 }
