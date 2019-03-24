@@ -25,8 +25,4 @@ public class Event {
     private LocalDateTime modified;
     @OneToMany
     private List<Bill> bills;
-
-    public void addBill(Bill bill) {
-        bills.add(bill);
-    }
 }

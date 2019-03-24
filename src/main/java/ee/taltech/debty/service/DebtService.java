@@ -27,6 +27,10 @@ public class DebtService {
         return debtRepository.save(debt);
     }
 
+    public void saveDebts(List<Debt> debts) {
+        debtRepository.saveAll(debts);
+    }
+
     public List<Debt> getAllDebts() {
         return debtRepository.findAll();
     }

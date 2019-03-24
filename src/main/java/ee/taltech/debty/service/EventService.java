@@ -7,6 +7,7 @@ import ee.taltech.debty.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class EventService {
 
     private final UserService userService;
+    private final DebtService debtService;
     private final EventRepository eventRepository;
     private final DebtDistributionService debtDistributionService;
 
@@ -41,5 +43,16 @@ public class EventService {
         Event event = getEventById(eventId).orElseGet(Event::new);
         if (!eventId.equals(event.getId())) return null;
         return debtDistributionService.calculateDebtDistribution(event);
+    }
+
+    public void closeEventAndSaveNewDebts(Long id, String email) {
+        Event event = getEventById(id).orElseGet(Event::new);
+        if (event.getOwner() != null && event.getOwner().getEmail().equals(email)) {
+            List<Debt> distributedDebts = calculateDistributedDebts(id);
+            event.setClosed(LocalDateTime.now());
+            if (distributedDebts != null) {
+                debtService.saveDebts(distributedDebts);
+            }
+        }
     }
 }
