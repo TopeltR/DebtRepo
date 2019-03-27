@@ -46,6 +46,17 @@ public class EventService {
         return debtDistributionService.calculateDebtDistribution(event);
     }
 
+    public void closeEventAndSaveNewDebts(Long id, String email) {
+        Event event = getEventById(id).orElseGet(Event::new);
+        if (event.getOwner() != null && event.getOwner().getEmail().equals(email)) {
+            List<Debt> distributedDebts = calculateDistributedDebts(id);
+            event.setClosed(LocalDateTime.now());
+            if (distributedDebts != null) {
+                debtService.saveDebts(distributedDebts);
+            }
+        }
+    }
+
     public void closeEvent(Long eventId, String currentLoggedInEmail) {
         Event event = getEventById(eventId).orElseGet(Event::new);
         if (!eventId.equals(event.getId()) || event.getOwner() == null ||
@@ -61,13 +72,13 @@ public class EventService {
         if (!eventById.isPresent()) return null;
 
         Event event = eventById.get();
-        event.updateBill(bill);
+        event.getBills().add(bill);
         Optional<Bill> billOptional = event.getBills().stream().filter(b -> b.getId().equals(bill.getId())).findFirst();
         if (billOptional.isPresent()) {
             Bill b = billOptional.get();
             event.getBills().remove(b);
         }
-        event.addBill(bill);
+        event.getBills().add(bill);
 
         return saveEvent(event);
     }

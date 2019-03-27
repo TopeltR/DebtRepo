@@ -5,6 +5,8 @@ import ee.taltech.debty.entity.Debt;
 import ee.taltech.debty.entity.Event;
 import ee.taltech.debty.service.BillService;
 import ee.taltech.debty.service.EventService;
+import ee.taltech.debty.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -12,14 +14,11 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequiredArgsConstructor
 public class EventController {
+
     private final EventService eventService;
     private final BillService billService;
-
-    public EventController(EventService eventService, BillService billService) {
-        this.eventService = eventService;
-        this.billService = billService;
-    }
 
     @GetMapping("/events/all")
     public List<Event> getAllEvents() {
@@ -53,6 +52,6 @@ public class EventController {
 
     @PostMapping("/events/{eventId}/close")
     public void closeEvent(@PathVariable("eventId") Long eventId, Principal principal) {
-        eventService.closeEvent(eventId, principal.getName());
+        eventService.closeEventAndSaveNewDebts(eventId, principal.getName());
     }
 }
