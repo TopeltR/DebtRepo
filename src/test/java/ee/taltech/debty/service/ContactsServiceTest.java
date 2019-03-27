@@ -1,9 +1,8 @@
 package ee.taltech.debty.service;
 
+import ee.taltech.debty.entity.Contact;
 import ee.taltech.debty.entity.Person;
 import ee.taltech.debty.repository.ContactRepository;
-import ee.taltech.debty.repository.PersonRepository;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -12,8 +11,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -21,29 +23,39 @@ public class ContactsServiceTest {
     @Mock
     private ContactRepository contactRepository;
     @Mock
-    private ContactService contactService;
-    @InjectMocks
     private UserService userService;
-    @Mock
-    private PersonRepository personRepository;
+    @InjectMocks
+    private ContactService contactService;
 
-    @Before
-    public void generateUsers() {
-        Person person = Person.builder().firstName("Ingmar").lastName("Liibert").email("ingmar@liibert").build();
-        Person person1 = Person.builder().firstName("Liine").lastName("Kasak").email("liine@kasak.ee").build();
-        Person person2 = Person.builder().firstName("Rasmus").lastName("Rüngenen").email("rasmus@rungenen.ee").build();
-        when(personRepository.findAll()).thenReturn(Arrays.asList(person,person1, person2));
-    }
+    private Person person1 = Person.builder().firstName("Ingmar").lastName("Liibert").email("ingmar@liibert").id(1L).build();
+    private Person person2 = Person.builder().firstName("Liine").lastName("Kasak").email("liine@kasak.ee").id(2L).build();
+    private Person person3 = Person.builder().firstName("Rasmus").lastName("Rüngenen").email("rasmus@rungenen.ee").id(3L).build();
+
+    List<Person> persons = Arrays.asList(person1, person2, person3);
 
     @Test
     public void getAllAvailableContacts_shouldReturnAllContacts() {
-        Person person2 = Person.builder().firstName("Rasmus").lastName("Rüngenen").email("rasmus@rungenen.ee").build();
-        Person person = Person.builder().firstName("Ingmar").lastName("Liibert").email("ingmar@liibert").build();
-        Person person1 = Person.builder().firstName("Liine").lastName("Kasak").email("liine@kasak.ee").build();
-        when(contactRepository.findAllByTo(person)).thenReturn(Collections.emptyList());
-        when(contactRepository.findAllByFrom(person)).thenReturn(Collections.emptyList());
+        when(userService.getAllUsers()).thenReturn(Arrays.asList(person2, person3));
+        when(contactRepository.findAllByTo(person1)).thenReturn(Collections.emptyList());
+        when(contactRepository.findAllByFrom(person1)).thenReturn(Collections.emptyList());
 
-        assertEquals(contactService.getAllAvailableContacts(person), Arrays.asList(person1,person2));
+        assertEquals(Arrays.asList(person2,person3), contactService.getAllAvailableContacts(person1));
+    }
+
+    @Test
+    public void addContact_withPeopleExisting_shouldCallContactRepositorySave() {
+        when(userService.getUserById(1L)).thenReturn(Optional.of(person1));
+        when(userService.getUserById(2L)).thenReturn(Optional.of(person2));
+
+        Contact contact = Contact.builder().from(person1).to(person2).isAccepted(false).build();
+
+        contactService.addContact(1L, 2L);
+
+        verify(contactRepository).save(contact);
+    }
+
+    @Test
+    public void addContact_withPeopleNotExisting_shouldNotCallContactRepositorySave() {
 
     }
 }

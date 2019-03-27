@@ -1,15 +1,14 @@
 package ee.taltech.debty.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Data
 @Entity
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Contact {
     @Id
     @GeneratedValue

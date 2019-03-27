@@ -9,6 +9,7 @@ import ee.taltech.debty.service.BillService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -31,9 +32,7 @@ public class DebtyApplication {
     private final PersonRepository personRepository;
     private final EventRepository eventRepository;
     private final DebtRepository debtRepository;
-    private final BillRepository billRepository;
     private final PasswordEncoder passwordEncoder;
-    private final BillService billService;
 
     public static void main(String[] args) {
         SpringApplication.run(DebtyApplication.class, args);
