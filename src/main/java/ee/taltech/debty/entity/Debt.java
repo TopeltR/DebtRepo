@@ -1,9 +1,9 @@
 package ee.taltech.debty.entity;
 
+import ee.taltech.debty.model.DebtStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,7 +15,6 @@ import java.util.Currency;
 
 @Data
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Debt {
@@ -24,8 +23,10 @@ public class Debt {
     private Long id;
     private String title;
     private BigDecimal sum;
-    private Currency currency;
-    private LocalDateTime createdAt;
+    @Builder.Default
+    private Currency currency = Currency.getInstance("EUR");
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime modifiedAt;
     @ManyToOne
     private Person payer;
@@ -33,5 +34,12 @@ public class Debt {
     private Person receiver;
     @ManyToOne
     private Person owner;
-    private boolean accepted = false;
+    @Builder.Default
+    private DebtStatus status = DebtStatus.NEW;
+
+    public Debt() {
+        this.status = DebtStatus.NEW;
+        this.createdAt = LocalDateTime.now();
+        this.currency = Currency.getInstance("EUR");
+    }
 }

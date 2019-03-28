@@ -37,7 +37,9 @@ public class Graph {
                 Debt.builder()
                         .sum(vertex.getSum())
                         .payer(vertex.getFrom())
-                        .receiver(vertex.getTo()).build())
+                        .receiver(vertex.getTo())
+                        .owner(vertex.getTo())
+                        .build())
                 .collect(Collectors.toList());
     }
 

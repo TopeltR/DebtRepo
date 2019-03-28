@@ -6,7 +6,6 @@ import ee.taltech.debty.repository.ContactRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ public class ContactService {
     public void addContact(Long personId1, Long personId2) {
         Optional<Person> personOptional1 = userService.getUserById(personId1);
         Optional<Person> personOptional2 = userService.getUserById(personId2);
-        if (personOptional1.isPresent() && personOptional2.isPresent()){
+        if (personOptional1.isPresent() && personOptional2.isPresent()) {
             Person person1 = personOptional1.get();
             Person person2 = personOptional2.get();
             Contact contact = new Contact();
@@ -68,14 +67,15 @@ public class ContactService {
         return contactPersonList;
     }
 
-    public void acceptContact(Long toPerson) {
-        Optional<Person> person = userService.getUserById(toPerson);
-        Optional<Contact> optionalContact;
-        if (person.isPresent()) {
-            optionalContact = contactRepository.findByFrom(person.get());
-            if (optionalContact.isPresent()) {
-                optionalContact.get().setAccepted(true);
-                contactRepository.save(optionalContact.get());
+    public void acceptContact(Long toId, Long fromId) {
+        Optional<Person> toPerson = userService.getUserById(toId);
+        Optional<Person> fromPerson = userService.getUserById(fromId);
+
+        if (toPerson.isPresent() && fromPerson.isPresent()) {
+            Optional<Contact> contact = contactRepository.findByFromAndTo(fromPerson.get(), toPerson.get());
+            if (contact.isPresent()) {
+                contact.get().setAccepted(true);
+                contactRepository.save(contact.get());
             }
         }
     }
@@ -93,6 +93,7 @@ public class ContactService {
         }
         return new ArrayList<>();
     }
+
     @Transactional
     public void removeContactById(Long fromId, Long contactId) {
         Optional<Person> fromPerson = userService.getUserById(fromId);

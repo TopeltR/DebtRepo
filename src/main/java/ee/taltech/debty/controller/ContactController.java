@@ -5,7 +5,6 @@ import ee.taltech.debty.service.ContactService;
 import ee.taltech.debty.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -50,9 +49,9 @@ public class ContactController {
         return contactService.getIncomingRequests(id);
     }
 
-    @PostMapping("/contact/accept/{toId}")
-    public void acceptContact(@PathVariable("toId") Long toId) {
-        contactService.acceptContact(toId);
+    @PostMapping("/contact/accept/{toId}/{fromId}")
+    public void acceptContact(@PathVariable("toId") Long toId, @PathVariable("fromId") Long fromId) {
+        contactService.acceptContact(toId, fromId);
     }
 }
 

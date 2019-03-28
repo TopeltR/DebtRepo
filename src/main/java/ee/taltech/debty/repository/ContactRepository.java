@@ -15,7 +15,7 @@ public interface ContactRepository extends JpaRepository <Contact, Long> {
 
     List<Contact> findAllByFrom(Person person);
 
-    Optional<Contact> findByFrom(Person person);
+    Optional<Contact> findByFromAndTo(Person person1, Person person);
 
     void removeContactByTo(Person person);
 
