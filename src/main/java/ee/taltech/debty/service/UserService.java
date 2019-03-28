@@ -19,7 +19,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final PersonRepository personRepository;
 
-    private void setParamsFromDto(Person person, PersonDto personDto) {
+    void setParamsFromDto(Person person, PersonDto personDto) {
         if (getUserByEmail(personDto.getEmail()) == null) {
             person.setEmail(personDto.getEmail());
         }
@@ -30,7 +30,7 @@ public class UserService {
         }
     }
 
-    private Person toUser(PersonDto personDto) {
+    Person toUser(PersonDto personDto) {
         Person person = new Person();
         setParamsFromDto(person, personDto);
         return person;

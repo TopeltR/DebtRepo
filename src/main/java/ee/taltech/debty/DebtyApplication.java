@@ -1,13 +1,13 @@
 package ee.taltech.debty;
 
 import ee.taltech.debty.entity.*;
-import ee.taltech.debty.repository.DebtRepository;
-import ee.taltech.debty.repository.EventRepository;
-import ee.taltech.debty.repository.PersonRepository;
+import ee.taltech.debty.repository.*;
+import ee.taltech.debty.service.BillService;
 import ee.taltech.debty.service.ContactService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -19,6 +19,7 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Currency;
 import java.util.List;
 
 @EnableJpaRepositories
@@ -147,32 +148,43 @@ public class DebtyApplication {
         event2.setOwner(person1);
         event2.setPeople(new ArrayList<>(Arrays.asList(person,person1,person2)));
 
-        eventRepository.save(event);
+        Event save = eventRepository.save(event);
         eventRepository.save(event1);
         eventRepository.save(event2);
 
         Debt debt = Debt.builder()
                 .title("MIKS?")
+                .createdAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.of(2006,9,7,15,42))
                 .payer(person2)
                 .receiver(person)
                 .owner(person)
+                .currency(Currency.getInstance("EUR"))
                 .sum(new BigDecimal(10)).build();
         Debt debt1 = Debt.builder()
                 .title("TESTIKENE")
+                .createdAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.of(1997,9,7,15,42))
                 .payer(person1)
                 .receiver(person2)
                 .owner(person1)
+                .currency(Currency.getInstance("EUR"))
                 .sum(new BigDecimal(10)).build();
         Debt debt2 = Debt.builder()
                 .title("TÄSTIKENE")
                 .payer(person)
                 .owner(person2)
+                .modifiedAt(LocalDateTime.of(2019,9,7,21,42))
                 .receiver(person2)
+                .currency(Currency.getInstance("EUR"))
                 .sum(new BigDecimal(100)).build();
         Debt debt3 = Debt.builder()
                 .payer(person)
                 .title("ayo")
+                .createdAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.of(2019,9,7,21,43))
                 .receiver(person3)
+                .currency(Currency.getInstance("EUR"))
                 .sum(new BigDecimal(100)).build();
 
         debtRepository.save(debt);
