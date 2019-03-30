@@ -43,28 +43,21 @@ public class EventService {
     public List<Debt> calculateDistributedDebts(Long eventId) {
         Event event = getEventById(eventId).orElseGet(Event::new);
         if (!eventId.equals(event.getId())) return null;
-        return debtDistributionService.calculateDebtDistribution(event);
+        List<Debt> debts = debtDistributionService.calculateDebtDistribution(event);
+        debts.forEach(debt -> debt.setTitle(String.format("Debt from event \"%s\"", event.getTitle())));
+        return debts;
     }
 
     public void closeEventAndSaveNewDebts(Long id, String email) {
         Event event = getEventById(id).orElseGet(Event::new);
         if (event.getOwner() != null && event.getOwner().getEmail().equals(email)) {
             List<Debt> distributedDebts = calculateDistributedDebts(id);
-            event.setClosed(LocalDateTime.now());
+            event.setClosedAt(LocalDateTime.now());
             if (distributedDebts != null) {
                 debtService.saveDebts(distributedDebts);
             }
+            saveEvent(event);
         }
-    }
-
-    public void closeEvent(Long eventId, String currentLoggedInEmail) {
-        Event event = getEventById(eventId).orElseGet(Event::new);
-        if (!eventId.equals(event.getId()) || event.getOwner() == null ||
-                !event.getOwner().getEmail().equals(currentLoggedInEmail)) return;
-
-        debtService.saveDebts(debtDistributionService.calculateDebtDistribution(event));
-        event.setClosed(LocalDateTime.now());
-        eventRepository.save(event);
     }
 
     public Event addOrUpdateBill(Long eventId, Bill bill) {

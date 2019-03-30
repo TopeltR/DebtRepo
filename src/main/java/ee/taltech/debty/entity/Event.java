@@ -22,8 +22,8 @@ public class Event {
     private String title;
     private String description;
     private LocalDateTime createdAt;
-    private LocalDateTime closed;
-    private LocalDateTime modified;
+    private LocalDateTime closedAt;
+    private LocalDateTime modifiedAt;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Bill> bills = new ArrayList<>();
 }

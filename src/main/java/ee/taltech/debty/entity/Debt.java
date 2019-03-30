@@ -28,6 +28,7 @@ public class Debt {
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime modifiedAt;
+    private LocalDateTime closedAt;
     @ManyToOne
     private Person payer;
     @ManyToOne

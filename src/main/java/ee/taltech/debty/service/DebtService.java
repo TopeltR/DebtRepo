@@ -2,6 +2,7 @@ package ee.taltech.debty.service;
 
 import ee.taltech.debty.entity.Debt;
 import ee.taltech.debty.entity.Person;
+import ee.taltech.debty.model.DebtStatus;
 import ee.taltech.debty.repository.DebtRepository;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,11 @@ public class DebtService {
 
     public Debt saveDebt(Debt debt) {
         if (debt.getPayer().getId() == null) userService.saveUser(debt.getPayer());
+        if (debt.getClosedAt() == null) {
+            if (debt.getStatus() == DebtStatus.CONFIRMED || debt.getStatus() == DebtStatus.DECLINED) {
+                debt.setClosedAt(LocalDateTime.now());
+            }
+        }
         debt.setModifiedAt(LocalDateTime.now());
         return debtRepository.save(debt);
     }
