@@ -193,14 +193,9 @@ public class DebtyApplication {
         contactService.addContact(person.getId(), person1.getId());
         contactService.acceptContact(person.getId(), person1.getId());
 
-        contactService.addContact(person1.getId(), person2.getId());
-        contactService.acceptContact(person2.getId(), person1.getId());
-
         contactService.addContact(person2.getId(), person.getId());
         contactService.acceptContact(person.getId(), person2.getId());
 
-        contactService.addContact(person1.getId(), person.getId());
-        contactService.acceptContact(person1.getId(), person.getId());
     }
 }
 
