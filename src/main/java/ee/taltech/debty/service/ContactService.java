@@ -53,14 +53,12 @@ public class ContactService {
         contacts.addAll(contactRepository.findAllByTo(person));
         List<Person> contactPersonList = new ArrayList<>();
         contactPersonList.addAll(
-                contacts
-                        .stream()
+                contacts.stream()
                         .filter(contact -> contact.isAccepted() && contact.getFrom() == person)
                         .map(Contact::getTo)
                         .collect(Collectors.toList()));
         contactPersonList.addAll(
-                contacts
-                        .stream()
+                contacts.stream()
                         .filter(contact -> contact.isAccepted() && contact.getTo() == person)
                         .map(Contact::getFrom)
                         .collect(Collectors.toList()));
@@ -72,7 +70,7 @@ public class ContactService {
         Optional<Person> fromPerson = userService.getUserById(fromId);
 
         if (toPerson.isPresent() && fromPerson.isPresent()) {
-            Optional<Contact> contact = contactRepository.findByFromAndTo(fromPerson.get(), toPerson.get());
+            Optional<Contact> contact = contactRepository.findByFromAndTo(toPerson.get(), fromPerson.get());
             if (contact.isPresent()) {
                 contact.get().setAccepted(true);
                 contactRepository.save(contact.get());

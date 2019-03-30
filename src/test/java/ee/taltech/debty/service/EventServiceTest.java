@@ -1,8 +1,10 @@
 package ee.taltech.debty.service;
 
+import ee.taltech.debty.entity.Bill;
 import ee.taltech.debty.entity.Event;
 import ee.taltech.debty.entity.Person;
 import ee.taltech.debty.repository.EventRepository;
+import ee.taltech.debty.repository.PersonRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,11 +13,11 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EventServiceTest {
@@ -25,6 +27,9 @@ public class EventServiceTest {
 
     @Mock
     private EventRepository eventRepository;
+
+    @Mock
+    private UserService userService;
 
     private Person person = Person.builder().firstName("Bob").lastName("Builder")
             .id(3L).build();
@@ -69,14 +74,82 @@ public class EventServiceTest {
     }
 
     @Test
-    public void getAllEventsByUserId_shouldReturnTwoEvents() {
+    public void getAllEventsByUserId_withNoUserRelatedToEvent_shouldReturnTwoEvents() {
         Event event = new Event();
         event.setTitle("Test event 1");
         event.setId(1L);
         event.setOwner(person);
+        eventService.saveEvent(event);
+        Event event1 = new Event();
+        event1.setTitle("Test event 1");
+        event1.setId(2L);
+        event1.setOwner(person);
+        eventService.saveEvent(event1);
+        when(userService.getUserById(3L)).thenReturn(Optional.of(person));
+        when(eventRepository.findAllByPeopleContaining(person))
+                .thenReturn(Arrays.asList(event, event1));
 
+        assertEquals(eventService.getAllEventsByUserId(3L), Arrays.asList(event, event1));
+        verify(eventRepository).findAllByPeopleContaining(person);
+    }
+
+    @Test
+    public void getAllEventsByUserId_withNoUser_shouldReturnEmptyArray() {
+        when(userService.getUserById(3L)).thenReturn(Optional.empty());
+        assertEquals(Collections.emptyList(), eventService.getAllEventsByUserId(3L));
+    }
+
+    @Test
+    public void addOrUpdateBill_withNoEvent_shouldAddBill() {
+        Event event = new Event();
+        event.setTitle("Test event 1");
+        event.setId(1L);
+        event.setOwner(person);
+        when(eventService.getEventById(1L)).thenReturn(Optional.of(event));
         eventService.saveEvent(event);
 
+        Bill bill = new Bill();
+        bill.setId(1L);
+        bill.setDescription("Test bill");
+
+        eventService.addOrUpdateBill(1L, bill);
+        assertEquals(1L, event.getBills().size());
+
+    }
+
+    @Test
+    public void addOrUpdateBill_withNoEvent_shouldNotSaveBill() {
+        Event event = new Event();
+
+        Bill bill = new Bill();
+        bill.setId(1L);
+        bill.setDescription("Test bill");
+        eventService.addOrUpdateBill(1L, bill);
+
+        assertEquals(0L, event.getBills().size());
+    }
+
+    @Test
+    public void addOrUpdateBill_withABill_shouldUpdateBill() {
+        Event event = new Event();
+        event.setTitle("Test event 1");
+        event.setId(1L);
+        event.setOwner(person);
+        when(eventService.getEventById(1L)).thenReturn(Optional.of(event));
+        eventService.saveEvent(event);
+
+        Bill bill = new Bill();
+        bill.setId(1L);
+        bill.setDescription("Test bill");
+
+        event.setBills(new ArrayList<>(Arrays.asList(bill)));
+
+        assertEquals(1L, event.getBills().size());
+        bill.setTitle("this is a test");
+        eventService.saveEvent(event);
+        eventService.addOrUpdateBill(1L, bill);
+
+        assertEquals("this is a test", event.getBills().get(0).getTitle());
     }
 
 

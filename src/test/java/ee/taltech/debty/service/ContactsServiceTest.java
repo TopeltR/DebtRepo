@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ContactsServiceTest {
@@ -56,6 +56,39 @@ public class ContactsServiceTest {
 
     @Test
     public void addContact_withPeopleNotExisting_shouldNotCallContactRepositorySave() {
+        when(userService.getUserById(1L)).thenReturn(Optional.empty());
+        when(userService.getUserById(2L)).thenReturn(Optional.empty());
+
+        Contact contact = Contact.builder().from(person1).to(person2).isAccepted(false).build();
+
+        contactService.addContact(1L, 2L);
+
+        verify(contactRepository, never()).save(contact);
+    }
+
+    @Test
+    public void getAllContacts_withPeopleNotExisting_shouldNotReturnAnyPeople() {
+        when(contactRepository.findAllByFrom(person1)).thenReturn(Collections.emptyList());
+        when(contactRepository.findAllByTo(person1)).thenReturn(Collections.emptyList());
+
+        List<Person> people = contactService.getAllContacts(person1);
+
+        assertEquals(Collections.emptyList(), people);
+    }
+
+    @Test
+    public void getAllContacts_withPeopleExisting_shouldReturnPeople() {
+        Contact contact = Contact.builder().from(person1).to(person2).isAccepted(true).build();
+        when(contactRepository.findAllByFrom(person1)).thenReturn(Collections.singletonList(contact));
+        when(contactRepository.findAllByTo(person1)).thenReturn(Collections.emptyList());
+
+        List<Person> people = contactService.getAllContacts(person1);
+
+        assertEquals(1, people.size());
+    }
+
+    @Test
+    public void acceptContact_withExistingContact_shouldCreateAcceptedContact() {
 
     }
 }

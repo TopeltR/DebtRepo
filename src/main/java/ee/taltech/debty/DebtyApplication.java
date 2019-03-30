@@ -153,39 +153,36 @@ public class DebtyApplication {
         eventRepository.save(event2);
 
         Debt debt = Debt.builder()
-                .title("MIKS?")
+                .title("Pitsa")
                 .createdAt(LocalDateTime.now())
-                .modifiedAt(LocalDateTime.of(2006,9,7,15,42))
                 .payer(person2)
                 .receiver(person)
                 .owner(person)
                 .currency(Currency.getInstance("EUR"))
-                .sum(new BigDecimal(10)).build();
+                .sum(new BigDecimal(8)).build();
         Debt debt1 = Debt.builder()
-                .title("TESTIKENE")
+                .title("Kütuseraha")
                 .createdAt(LocalDateTime.now())
-                .modifiedAt(LocalDateTime.of(1997,9,7,15,42))
                 .payer(person1)
                 .receiver(person2)
                 .owner(person1)
                 .currency(Currency.getInstance("EUR"))
-                .sum(new BigDecimal(10)).build();
+                .sum(new BigDecimal(35)).build();
         Debt debt2 = Debt.builder()
-                .title("TÄSTIKENE")
+                .title("Snäkid")
                 .payer(person)
                 .owner(person2)
-                .modifiedAt(LocalDateTime.of(2019,9,7,21,42))
+                .createdAt(LocalDateTime.now())
                 .receiver(person2)
                 .currency(Currency.getInstance("EUR"))
-                .sum(new BigDecimal(100)).build();
+                .sum(new BigDecimal(23)).build();
         Debt debt3 = Debt.builder()
                 .payer(person)
-                .title("ayo")
+                .title("Kinopiletid ja popcorn")
                 .createdAt(LocalDateTime.now())
-                .modifiedAt(LocalDateTime.of(2019,9,7,21,43))
                 .receiver(person3)
                 .currency(Currency.getInstance("EUR"))
-                .sum(new BigDecimal(100)).build();
+                .sum(new BigDecimal(55)).build();
 
         debtRepository.save(debt);
         debtRepository.save(debt1);
@@ -197,10 +194,10 @@ public class DebtyApplication {
         contactService.acceptContact(person.getId(), person1.getId());
 
         contactService.addContact(person1.getId(), person2.getId());
-        contactService.acceptContact(person1.getId(), person2.getId());
+        contactService.acceptContact(person2.getId(), person1.getId());
 
         contactService.addContact(person2.getId(), person.getId());
-        contactService.acceptContact(person2.getId(), person.getId());
+        contactService.acceptContact(person.getId(), person2.getId());
 
         contactService.addContact(person1.getId(), person.getId());
         contactService.acceptContact(person1.getId(), person.getId());

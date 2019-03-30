@@ -72,7 +72,6 @@ public class EventService {
         if (!eventById.isPresent()) return null;
 
         Event event = eventById.get();
-        event.getBills().add(bill);
         Optional<Bill> billOptional = event.getBills().stream().filter(b -> b.getId().equals(bill.getId())).findFirst();
         if (billOptional.isPresent()) {
             Bill b = billOptional.get();

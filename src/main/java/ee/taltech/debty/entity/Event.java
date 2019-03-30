@@ -5,6 +5,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -24,5 +25,5 @@ public class Event {
     private LocalDateTime closed;
     private LocalDateTime modified;
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Bill> bills;
+    private List<Bill> bills = new ArrayList<>();
 }

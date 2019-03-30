@@ -38,7 +38,7 @@ public class UserServiceTest {
     private Person person2 = Person.builder().firstName("Kalevi").lastName("Poeg").id(4L).build();
 
     @Test
-    public void setParamsFromDto_whenSettingEmail_shouldChangePersonEmail() {
+    public void setParamsFromDto_withEmailChange_shouldChangePersonEmail() {
         PersonDto personDto = new PersonDto();
         personDto.setEmail("bob@builer.com");
         when(personRepository.findByEmail("bob@builer.com")).thenReturn(person);
@@ -47,7 +47,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void setParamsFromDto_whenSettingName_shouldChangePersonFirstName() {
+    public void setParamsFromDto_withNameChange_shouldChangePersonName() {
         PersonDto personDto = new PersonDto();
         personDto.setFirstName("Bob");
         personDto.setLastName("Builder");
@@ -57,7 +57,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void setParamsFromDto_whenSettingPassword_shouldChangePersonPassword() {
+    public void setParamsFromDto_withPasswordChange_shouldChangePersonPassword() {
         PersonDto personDto = new PersonDto();
         assertNull(person.getPassword());
         personDto.setPassword("testing");
@@ -102,7 +102,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void emailExists_whenPersonExists_shouldReturnTrue() {
+    public void emailExists_withExistingPerson_shouldReturnTrue() {
         when(personRepository.findByEmail("bob@builder.com")).thenReturn(person);
         assertTrue(userService.emailExists("bob@builder.com"));
         verify(personRepository).findByEmail("bob@builder.com");
@@ -132,7 +132,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void updateUser_whenNoUserIsPresent_shouldReturnNull() {
+    public void updateUser_withNoUserPresent_shouldReturnNull() {
         PersonDto personDto = new PersonDto();
         personDto.setId(3L);
         personDto.setEmail("bob@builder.com");
