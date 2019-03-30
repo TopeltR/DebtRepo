@@ -9,12 +9,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.never;
 
@@ -89,11 +87,61 @@ public class ContactsServiceTest {
 
     @Test
     public void acceptContact_withExistingContact_shouldCreateAcceptedContact() {
+        Contact contact = Contact.builder().from(person1).to(person2).isAccepted(false).build();
         when(userService.getUserById(1L)).thenReturn(Optional.of(person1));
         when(userService.getUserById(2L)).thenReturn(Optional.of(person2));
+        when(contactRepository.findByFromAndTo(any(), any())).thenReturn(Optional.of(contact));
 
         contactService.acceptContact(1L, 2L);
 
+        assertTrue(contact.isAccepted());
+        verify(contactRepository).save(contact);
+    }
+
+    @Test
+    public void acceptContact_withNoExistingContact_shouldNotCreateAcceptedContact() {
+        when(userService.getUserById(1L)).thenReturn(Optional.of(person1));
+        when(userService.getUserById(2L)).thenReturn(Optional.of(person2));
+        when(contactRepository.findByFromAndTo(any(), any())).thenReturn(Optional.empty());
+
+        contactService.acceptContact(1L, 2L);
+
+        verify(contactRepository, never()).save(any());
+    }
+
+    @Test
+    public void getIncomingRequests_withExistingRequest_shouldReturnList() {
+        when(userService.getUserById(1L)).thenReturn(Optional.of(person1));
+        Contact contact = Contact.builder().from(person1).to(person2).isAccepted(false).build();
+
+        when(contactRepository.findAllByTo(person1))
+                .thenReturn(new ArrayList<>(Collections.singletonList(contact)));
+        List<Person> people = contactService.getIncomingRequests(1L);
+        assertEquals(1L, people.size());
+    }
+
+    @Test
+    public void getIncomingRequests_withNoAcceptedRequests_shouldReturnEmptyList() {
+        when(userService.getUserById(1L)).thenReturn(Optional.of(person1));
+        Contact contact = Contact.builder().from(person1).to(person2).isAccepted(true).build();
+        when(contactRepository.findAllByTo(person1))
+                .thenReturn(new ArrayList<>(Collections.singletonList(contact)));
+
+        List<Person> people = contactService.getIncomingRequests(1L);
+
+        assertEquals(Collections.emptyList(), people);
+    }
+
+    @Test
+    public void getIncomingRequests_withNoExistingPerson_shouldReturnEmptyList() {
+        when(userService.getUserById(1L)).thenReturn(Optional.empty());
+        List<Person> people = contactService.getIncomingRequests(1L);
+
+        assertEquals(Collections.emptyList(), people);
+    }
+
+    @Test
+    public void removeContactById_withExistingContact() {
 
     }
 }
