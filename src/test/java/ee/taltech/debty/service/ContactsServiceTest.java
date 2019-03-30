@@ -89,6 +89,11 @@ public class ContactsServiceTest {
 
     @Test
     public void acceptContact_withExistingContact_shouldCreateAcceptedContact() {
+        when(userService.getUserById(1L)).thenReturn(Optional.of(person1));
+        when(userService.getUserById(2L)).thenReturn(Optional.of(person2));
+
+        contactService.acceptContact(1L, 2L);
+
 
     }
 }
