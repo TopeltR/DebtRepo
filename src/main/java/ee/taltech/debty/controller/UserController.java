@@ -1,7 +1,6 @@
 package ee.taltech.debty.controller;
 
 import ee.taltech.debty.entity.BankAccount;
-import ee.taltech.debty.entity.Event;
 import ee.taltech.debty.entity.Person;
 import ee.taltech.debty.model.PersonDto;
 import ee.taltech.debty.security.service.SecurityService;
@@ -9,9 +8,13 @@ import ee.taltech.debty.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.Email;
 import java.security.Principal;
 import java.util.List;
@@ -68,5 +71,16 @@ public class UserController {
     @PostMapping("/users/bankAccount/{userId}")
     public void addBankAccountForUser(@PathVariable("userId") Long userId, @RequestBody BankAccount bankAccount) {
         userService.addBankAccountForUser(bankAccount, userId);
+    }
+
+    @PostMapping("/signout")
+    public void logoutDo(HttpServletRequest request) {
+        SecurityContextHolder.clearContext();
+
+        HttpSession session = request.getSession(false);
+        if (session != null) session.invalidate();
+        for (Cookie cookie : request.getCookies()) {
+            cookie.setMaxAge(0);
+        }
     }
 }
