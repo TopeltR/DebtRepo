@@ -93,14 +93,13 @@ public class ContactService {
     }
 
     @Transactional
-    public void removeContactById(Long fromId, Long contactId) {
+    public void removeContactById(Long fromId, Long toId) {
         Optional<Person> fromPerson = userService.getUserById(fromId);
-        Optional<Person> toPerson = userService.getUserById(contactId);
+        Optional<Person> toPerson = userService.getUserById(toId);
 
-        fromPerson.ifPresent(contactRepository::removeContactByFrom);
-        fromPerson.ifPresent(contactRepository::removeContactByTo);
-        toPerson.ifPresent(contactRepository::removeContactByTo);
-        toPerson.ifPresent(contactRepository::removeContactByFrom);
-
+        if(fromPerson.isPresent() && toPerson.isPresent()) {
+            contactRepository.removeContactByFrom(fromPerson.get());
+            contactRepository.removeContactByTo(toPerson.get());
+        }
     }
 }

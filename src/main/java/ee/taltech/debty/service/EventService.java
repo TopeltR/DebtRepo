@@ -63,7 +63,6 @@ public class EventService {
     public Event addOrUpdateBill(Long eventId, Bill bill) {
         Optional<Event> eventById = getEventById(eventId);
         if (!eventById.isPresent()) return null;
-
         Event event = eventById.get();
         Optional<Bill> billOptional = event.getBills().stream().filter(b -> b.getId().equals(bill.getId())).findFirst();
         if (billOptional.isPresent()) {

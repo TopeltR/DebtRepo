@@ -141,7 +141,29 @@ public class ContactsServiceTest {
     }
 
     @Test
-    public void removeContactById_withExistingContact() {
+    public void removeContactById_withExistingContact_shouldRemoveContact() {
+        when(userService.getUserById(1L)).thenReturn(Optional.of(person1));
+        when(userService.getUserById(2L)).thenReturn(Optional.of(person2));
+        Contact contact = Contact.builder().from(person1).to(person2).isAccepted(true).build();
 
+        contactRepository.save(contact);
+
+        contactService.removeContactById(1L, 2L);
+
+        assertEquals(Collections.emptyList(), contactRepository.findAll());
+    }
+
+    @Test
+    public void removeContactById_withNoExistingPerson_shouldNotRemoveContact() {
+        when(userService.getUserById(1L)).thenReturn(Optional.of(person1));
+        when(userService.getUserById(3L)).thenReturn(Optional.empty());
+        Contact contact = Contact.builder().from(person1).to(person2).isAccepted(true).build();
+
+        contactRepository.save(contact);
+
+        contactService.removeContactById(1L, 3L);
+
+        verify(contactRepository, never()).removeContactByFrom(any());
+        verify(contactRepository, never()).removeContactByTo(any());
     }
 }
