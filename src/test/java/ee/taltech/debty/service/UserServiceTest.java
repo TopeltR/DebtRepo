@@ -58,12 +58,15 @@ public class UserServiceTest {
 
     @Test
     public void setParamsFromDto_withPasswordChange_shouldChangePersonPassword() {
+        String password = "testing1";
         PersonDto personDto = new PersonDto();
-        assertNull(person.getPassword());
-        personDto.setPassword("testing");
-        when(passwordEncoder.encode(personDto.getPasswordConfirm())).thenReturn("testing");
+        personDto.setPassword(password);
+        personDto.setPasswordConfirmation(password);
+        when(passwordEncoder.encode(personDto.getPasswordConfirmation())).thenReturn(password);
+
         userService.setParamsFromDto(person, personDto);
-        assertFalse(person.getPassword().isEmpty());
+
+        assertEquals(password, person.getPassword());
     }
 
     @Test
