@@ -14,7 +14,6 @@ import java.util.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.never;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ContactsServiceTest {
@@ -92,7 +91,7 @@ public class ContactsServiceTest {
         when(userService.getUserById(2L)).thenReturn(Optional.of(person2));
         when(contactRepository.findByFromAndTo(any(), any())).thenReturn(Optional.of(contact));
 
-        contactService.acceptContact(1L, 2L);
+        contactService.acceptContactForPersonFromPerson(1L, 2L);
 
         assertTrue(contact.isAccepted());
         verify(contactRepository).save(contact);
@@ -104,7 +103,7 @@ public class ContactsServiceTest {
         when(userService.getUserById(2L)).thenReturn(Optional.of(person2));
         when(contactRepository.findByFromAndTo(any(), any())).thenReturn(Optional.empty());
 
-        contactService.acceptContact(1L, 2L);
+        contactService.acceptContactForPersonFromPerson(1L, 2L);
 
         verify(contactRepository, never()).save(any());
     }

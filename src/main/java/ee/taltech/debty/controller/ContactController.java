@@ -51,7 +51,7 @@ public class ContactController {
 
     @PostMapping("/contact/accept/{toId}/{fromId}")
     public void acceptContact(@PathVariable("toId") Long toId, @PathVariable("fromId") Long fromId) {
-        contactService.acceptContact(toId, fromId);
+        contactService.acceptContactForPersonFromPerson(toId, fromId);
     }
 }
 

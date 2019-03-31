@@ -65,12 +65,12 @@ public class ContactService {
         return contactPersonList;
     }
 
-    public void acceptContact(Long toId, Long fromId) {
+    public void acceptContactForPersonFromPerson(Long toId, Long fromId) {
         Optional<Person> toPerson = userService.getUserById(toId);
         Optional<Person> fromPerson = userService.getUserById(fromId);
 
         if (toPerson.isPresent() && fromPerson.isPresent()) {
-            Optional<Contact> contact = contactRepository.findByFromAndTo(toPerson.get(), fromPerson.get());
+            Optional<Contact> contact = contactRepository.findByFromAndTo(fromPerson.get(), toPerson.get());
             if (contact.isPresent()) {
                 contact.get().setAccepted(true);
                 contactRepository.save(contact.get());

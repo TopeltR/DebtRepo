@@ -1,13 +1,13 @@
 package ee.taltech.debty;
 
 import ee.taltech.debty.entity.*;
-import ee.taltech.debty.repository.*;
-import ee.taltech.debty.service.BillService;
+import ee.taltech.debty.repository.DebtRepository;
+import ee.taltech.debty.repository.EventRepository;
+import ee.taltech.debty.repository.PersonRepository;
 import ee.taltech.debty.service.ContactService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -191,10 +191,13 @@ public class DebtyApplication {
 
 
         contactService.addContact(person.getId(), person1.getId());
-        contactService.acceptContact(person.getId(), person1.getId());
+        contactService.acceptContactForPersonFromPerson(person1.getId(), person.getId());
 
         contactService.addContact(person2.getId(), person.getId());
-        contactService.acceptContact(person.getId(), person2.getId());
+        contactService.acceptContactForPersonFromPerson(person.getId(), person2.getId());
+
+        contactService.addContact(person1.getId(), person2.getId());
+        contactService.acceptContactForPersonFromPerson(person2.getId(), person1.getId());
 
     }
 }
