@@ -20,7 +20,7 @@ public class PersonDto {
     private String password;
     @NotNull
     @Length(min=8, max=255)
-    private String passwordConfirm;
+    private String passwordConfirmation;
     @NotNull
     @Length(min=1, max=255)
     private String firstName;

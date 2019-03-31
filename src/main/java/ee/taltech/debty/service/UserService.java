@@ -25,8 +25,8 @@ public class UserService {
         }
         person.setFirstName(personDto.getFirstName());
         person.setLastName(personDto.getLastName());
-        if (personDto.getPassword() != null) {
-            person.setPassword(passwordEncoder.encode(personDto.getPasswordConfirm()));
+        if (personDto.getPassword() != null && personDto.getPasswordConfirmation() != null) {
+            person.setPassword(passwordEncoder.encode(personDto.getPasswordConfirmation()));
         }
     }
 

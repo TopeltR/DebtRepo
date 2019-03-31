@@ -32,7 +32,7 @@ public class UserController {
 
         Person person = userService.saveNewUser(userForm);
 
-        securityService.autoLogin(userForm.getEmail(), userForm.getPasswordConfirm());
+        securityService.autoLogin(userForm.getEmail(), userForm.getPasswordConfirmation());
 
         return ResponseEntity.status(HttpStatus.OK).body(person);
     }
