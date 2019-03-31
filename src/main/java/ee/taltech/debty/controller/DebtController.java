@@ -4,6 +4,7 @@ import ee.taltech.debty.entity.Debt;
 import ee.taltech.debty.service.DebtService;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -38,5 +39,10 @@ public class DebtController {
     @DeleteMapping("/debts/{id}")
     public void deleteDebt(@PathVariable("id") Long id) {
         debtService.deleteDebt(id);
+    }
+
+    @GetMapping("/debts/user/{userId}/total")
+    public BigDecimal getTotalDebtBalance(@PathVariable("userId") Long userId) {
+        return debtService.getTotalDebtBalanceForUser(userId);
     }
 }

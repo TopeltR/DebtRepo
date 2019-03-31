@@ -6,6 +6,7 @@ import ee.taltech.debty.model.DebtStatus;
 import ee.taltech.debty.repository.DebtRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,5 +56,17 @@ public class DebtService {
     public void deleteDebt(Long id) {
         Optional<Debt> debtOptional = getDebtById(id);
         debtOptional.ifPresent(debtRepository::delete);
+    }
+
+    public BigDecimal getTotalDebtBalanceForUser(Long userId) {
+        BigDecimal sum = BigDecimal.ZERO;
+        for (Debt debt : getAllDebtsByUserId(userId)) {
+            if (userId.equals(debt.getPayer().getId())) {
+                sum = sum.subtract(debt.getSum());
+            } else {
+                sum = sum.add(debt.getSum());
+            }
+        }
+        return sum;
     }
 }
