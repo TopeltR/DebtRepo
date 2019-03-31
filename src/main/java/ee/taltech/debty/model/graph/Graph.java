@@ -5,6 +5,7 @@ import ee.taltech.debty.entity.Person;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,7 @@ public class Graph {
                         .payer(vertex.getFrom())
                         .receiver(vertex.getTo())
                         .owner(vertex.getTo())
+                        .modifiedAt(LocalDateTime.now())
                         .build())
                 .collect(Collectors.toList());
     }
