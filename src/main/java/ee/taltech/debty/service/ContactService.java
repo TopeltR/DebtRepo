@@ -100,6 +100,8 @@ public class ContactService {
         if(fromPerson.isPresent() && toPerson.isPresent()) {
             contactRepository.removeContactByFrom(fromPerson.get());
             contactRepository.removeContactByTo(toPerson.get());
+            contactRepository.removeContactByFrom(toPerson.get());
+            contactRepository.removeContactByTo(fromPerson.get());
         }
     }
 }
