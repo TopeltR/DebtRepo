@@ -12,37 +12,63 @@ import java.util.stream.Collectors;
 @Data
 public class Graph {
 
-    private Map<Person, Node> people = new HashMap<>();
-    private List<Vertex> vertices = new ArrayList<>();
+    private Map<Person, Vertex> people = new HashMap<>();
+    private List<Edge> edges = new ArrayList<>();
 
     public Graph(List<Person> people) {
-        people.forEach(person -> this.people.put(person, new Node(person)));
+        people.forEach(person -> this.people.put(person, new Vertex(person)));
     }
 
     public void addRelation(BigDecimal sum, Person from, Person to) {
         if (to == from) return;
-        Vertex vertex = new Vertex(sum, from, to);
-        this.vertices.add(vertex);
-        this.people.get(from).getOutgoingVertices().add(vertex);
-        this.people.get(to).getIncomingVertices().add(vertex);
+        Edge edge = new Edge(sum, from, to);
+        this.edges.add(edge);
+        this.people.get(from).getOutgoingEdges().add(edge);
+        this.people.get(to).getIncomingEdges().add(edge);
     }
 
-    private void deleteRelation(Vertex vertex) {
-        this.people.get(vertex.getFrom()).getOutgoingVertices().remove(vertex);
-        this.people.get(vertex.getTo()).getIncomingVertices().remove(vertex);
-        this.vertices.remove(vertex);
+    private void deleteRelation(Edge edge) {
+        this.people.get(edge.getFrom()).getOutgoingEdges().remove(edge);
+        this.people.get(edge.getTo()).getIncomingEdges().remove(edge);
+        this.edges.remove(edge);
     }
 
     public List<Debt> getAllDebts() {
-        return this.vertices.stream().map(vertex ->
+        removeRedundantEdges();
+        return this.edges.stream().map(edge ->
                 Debt.builder()
-                        .sum(vertex.getSum())
-                        .payer(vertex.getFrom())
-                        .receiver(vertex.getTo())
-                        .owner(vertex.getTo())
+                        .sum(edge.getSum())
+                        .payer(edge.getFrom())
+                        .receiver(edge.getTo())
+                        .owner(edge.getTo())
                         .modifiedAt(LocalDateTime.now())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    private void removeRedundantEdges() {
+        Map<Person, Map<Person, BigDecimal>> fromToSumMap = new HashMap<>();
+        Person from, to;
+
+        for (Edge edge : edges) {
+            from = edge.getFrom();
+            to = edge.getTo();
+
+            fromToSumMap.putIfAbsent(from, new HashMap<>());
+            fromToSumMap.get(from).putIfAbsent(to, BigDecimal.ZERO);
+
+            fromToSumMap.get(from).put(to, fromToSumMap.get(from).get(to).add(edge.getSum()));
+        }
+
+        this.edges = new ArrayList<>();
+        for (Person fromPerson : fromToSumMap.keySet()) {
+            for (Person toPerson : fromToSumMap.get(fromPerson).keySet()) {
+                BigDecimal sum = fromToSumMap.get(fromPerson).get(toPerson);
+                if (!sum.equals(BigDecimal.ZERO)) {
+                    this.edges.add(new Edge(sum, fromPerson, toPerson));
+                }
+            }
+        }
     }
 
     public void optimizeDebts() {
@@ -51,14 +77,14 @@ public class Graph {
         while (!optimized) {
             optimized = true;
 
-            for (Node node : this.people.values()) {
-                Person person = node.getPerson();
+            for (Vertex vertex : this.people.values()) {
+                Person person = vertex.getPerson();
 
-                while (!node.getIncomingVertices().isEmpty() && !node.getOutgoingVertices().isEmpty()) {
+                while (!vertex.getIncomingEdges().isEmpty() && !vertex.getOutgoingEdges().isEmpty()) {
                     optimized = false;
 
-                    Vertex minIncoming = node.getIncomingVertices().poll();
-                    Vertex minOutgoing = node.getOutgoingVertices().poll();
+                    Edge minIncoming = vertex.getIncomingEdges().poll();
+                    Edge minOutgoing = vertex.getOutgoingEdges().poll();
 
                     shortenPath(person, minIncoming, minOutgoing);
                 }
@@ -66,7 +92,7 @@ public class Graph {
         }
     }
 
-    private void shortenPath(Person person, Vertex minIncoming, Vertex minOutgoing) {
+    private void shortenPath(Person person, Edge minIncoming, Edge minOutgoing) {
         BigDecimal incSum = Objects.requireNonNull(minIncoming).getSum();
         BigDecimal outSum = Objects.requireNonNull(minOutgoing).getSum();
         int compareTo = incSum.compareTo(outSum);
@@ -93,5 +119,4 @@ public class Graph {
         deleteRelation(minOutgoing);
         deleteRelation(minIncoming);
     }
-
 }

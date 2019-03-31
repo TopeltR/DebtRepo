@@ -3,18 +3,18 @@ package ee.taltech.debty.model.graph;
 import ee.taltech.debty.entity.Person;
 import lombok.Data;
 
-import java.math.BigDecimal;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 @Data
 class Vertex {
 
-    private BigDecimal sum;
-    private Person from;
-    private Person to;
+    private Person person;
+    private Queue<Edge> incomingEdges = new PriorityQueue<>((o1, o2) -> o2.getSum().intValue() - o1.getSum().intValue());
+    private Queue<Edge> outgoingEdges = new PriorityQueue<>((o1, o2) -> o2.getSum().intValue() - o1.getSum().intValue());
 
-    Vertex(BigDecimal sum, Person from, Person to) {
-        this.sum = sum;
-        this.from = from;
-        this.to = to;
+    Vertex(Person person) {
+        this.person = person;
     }
+
 }
