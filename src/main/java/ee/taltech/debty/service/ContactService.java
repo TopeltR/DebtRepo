@@ -96,12 +96,9 @@ public class ContactService {
     public void removeContactById(Long fromId, Long toId) {
         Optional<Person> fromPerson = userService.getUserById(fromId);
         Optional<Person> toPerson = userService.getUserById(toId);
-
         if(fromPerson.isPresent() && toPerson.isPresent()) {
-            contactRepository.removeContactByFrom(fromPerson.get());
-            contactRepository.removeContactByTo(toPerson.get());
-            contactRepository.removeContactByFrom(toPerson.get());
-            contactRepository.removeContactByTo(fromPerson.get());
+            contactRepository.removeByFromAndTo(fromPerson.get(), toPerson.get());
+            contactRepository.removeByFromAndTo(toPerson.get(), fromPerson.get());
         }
     }
 }

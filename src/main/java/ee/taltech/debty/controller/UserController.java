@@ -64,6 +64,7 @@ public class UserController {
     public Person updateUser(@RequestBody PersonDto user) {
         return userService.updateUser(user);
     }
+
     @PostMapping("/users/bankAccount/{userId}")
     public void addBankAccountForUser(@PathVariable("userId") Long userId, @RequestBody BankAccount bankAccount) {
         userService.addBankAccountForUser(bankAccount, userId);
