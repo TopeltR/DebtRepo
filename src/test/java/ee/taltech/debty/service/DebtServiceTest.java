@@ -79,9 +79,10 @@ public class DebtServiceTest {
         debt.setPayer(person);
 
         when(debtRepository.findAllByPersonParticipating(person)).thenReturn(Collections.singletonList(debt));
-        verify(debtRepository).findAllByPersonParticipating(person);
         assertEquals(1, debtService.getAllDebtsByUserId(3L).size());
     }
+
+
 
 
 
