@@ -34,7 +34,6 @@ public class Graph {
     }
 
     public List<Debt> getAllDebts() {
-        removeRedundantEdges();
         return this.edges.stream().map(edge ->
                 Debt.builder()
                         .sum(edge.getSum())
@@ -46,7 +45,7 @@ public class Graph {
                 .collect(Collectors.toList());
     }
 
-    private void removeRedundantEdges() {
+    public void removeRedundantEdges() {
         Map<Person, Map<Person, BigDecimal>> fromToSumMap = new HashMap<>();
         Person from, to;
 

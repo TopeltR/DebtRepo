@@ -15,6 +15,7 @@ public class DebtDistributionService {
     List<Debt> calculateDebtDistribution(Event event) {
         Graph graph = generateGraphFromBills(event);
         graph.optimizeDebts();
+        graph.removeRedundantEdges();
         return graph.getAllDebts();
     }
 
