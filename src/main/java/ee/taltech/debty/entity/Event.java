@@ -21,7 +21,7 @@ public class Event {
     private Person owner;
     private String title;
     private String description;
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime closedAt;
     private LocalDateTime modifiedAt;
     @OneToMany(cascade = CascadeType.ALL)
