@@ -94,7 +94,7 @@ public class DebtyApplication {
         event.setTitle("Reede õhtune kino");
         event.setDescription("Reede õhtune kinoseansi kogu arveldus. Teeme nii, et igaüks paneb siia oma maksumused kirja :)");
         event.setOwner(person);
-        event.setPeople(new ArrayList<>(Arrays.asList(person,person1,person2)));
+        event.setPeople(new ArrayList<>(Arrays.asList(person, person1, person2)));
 
         Bill bill1 = new Bill();
         bill1.setTitle("piletid");
@@ -103,6 +103,7 @@ public class DebtyApplication {
         bill1.setPeople(Arrays.asList(person, person1));
         bill1.setSum(new BigDecimal(11.50));
         bill1.setCreatedAt(LocalDateTime.now());
+
         List<BillPayment> billPayments1 = new ArrayList<>();
         BillPayment billPayment1;
         BigDecimal sum1 = bill1.getSum().divide(new BigDecimal(bill1.getPeople().size()), 2, RoundingMode.HALF_EVEN);
@@ -140,13 +141,13 @@ public class DebtyApplication {
         event1.setDescription("Saame kord kuus kokku ning vaatame, kes kõige kiirem on rajal. Teeme standardiks Laagri" +
                 "kardiraja, seal hea mõnus sõita. Mul seal käpp ka sees");
         event1.setOwner(person2);
-        event1.setPeople(new ArrayList<>(Arrays.asList(person,person1,person2, person3)));
+        event1.setPeople(new ArrayList<>(Arrays.asList(person, person1, person2, person3)));
 
         Event event2 = new Event();
         event2.setTitle("Lauamänguõhtu");
         event2.setDescription("Vaatame jooksvalt, kes mida toob aga põhimõtteliselt siin saame mugavalt järge pidada ostudel");
         event2.setOwner(person1);
-        event2.setPeople(new ArrayList<>(Arrays.asList(person,person1,person2)));
+        event2.setPeople(new ArrayList<>(Arrays.asList(person, person1, person2)));
 
         eventRepository.save(event);
         eventRepository.save(event1);
@@ -215,7 +216,6 @@ public class DebtyApplication {
 
         contactService.addContact(person1.getId(), person2.getId());
         contactService.acceptContactForPersonFromPerson(person2.getId(), person1.getId());
-
     }
 }
 

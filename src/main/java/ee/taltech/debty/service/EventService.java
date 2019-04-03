@@ -48,7 +48,7 @@ public class EventService {
         return debts;
     }
 
-    public void closeEventAndSaveNewDebts(Long id, String email) {
+    public Event closeEventAndSaveNewDebts(Long id, String email) {
         Event event = getEventById(id).orElseGet(Event::new);
         if (event.getOwner() != null && event.getOwner().getEmail().equals(email)) {
             List<Debt> distributedDebts = calculateDistributedDebts(id);
@@ -56,8 +56,9 @@ public class EventService {
             if (distributedDebts != null) {
                 debtService.saveDebts(distributedDebts);
             }
-            saveEvent(event);
+            event = saveEvent(event);
         }
+        return event;
     }
 
     public Event addOrUpdateBill(Long eventId, Bill bill) {

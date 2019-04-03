@@ -51,7 +51,7 @@ public class EventController {
     }
 
     @PostMapping("/events/{eventId}/close")
-    public void closeEvent(@PathVariable("eventId") Long eventId, Principal principal) {
-        eventService.closeEventAndSaveNewDebts(eventId, principal.getName());
+    public Event closeEvent(@PathVariable("eventId") Long eventId, Principal principal) {
+        return eventService.closeEventAndSaveNewDebts(eventId, principal.getName());
     }
 }

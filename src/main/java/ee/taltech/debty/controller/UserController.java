@@ -68,9 +68,13 @@ public class UserController {
         userService.addBankAccountForUser(bankAccount, userId);
     }
 
+    void clearSecurityContext() {
+        SecurityContextHolder.clearContext();
+    }
+
     @PostMapping("/signout")
     public void logoutDo(HttpServletRequest request) {
-        SecurityContextHolder.clearContext();
+        clearSecurityContext();
 
         HttpSession session = request.getSession(false);
         if (session != null) session.invalidate();
