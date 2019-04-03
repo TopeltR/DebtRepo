@@ -40,11 +40,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(person);
     }
 
-    @GetMapping("/users/all")
-    public List<Person> getAllUsers() {
-        return userService.getAllUsers();
-    }
-
     @GetMapping("/users/loggedIn")
     public Person getLoggedInUser(Principal principal) {
         String email = principal.getName();
