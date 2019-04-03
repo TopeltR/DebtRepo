@@ -1,6 +1,7 @@
 package ee.taltech.debty;
 
 import ee.taltech.debty.entity.*;
+import ee.taltech.debty.model.DebtStatus;
 import ee.taltech.debty.repository.DebtRepository;
 import ee.taltech.debty.repository.EventRepository;
 import ee.taltech.debty.repository.PersonRepository;
@@ -19,7 +20,6 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Currency;
 import java.util.List;
 
 @EnableJpaRepositories
@@ -148,46 +148,63 @@ public class DebtyApplication {
         event2.setOwner(person1);
         event2.setPeople(new ArrayList<>(Arrays.asList(person,person1,person2)));
 
-        Event save = eventRepository.save(event);
+        eventRepository.save(event);
         eventRepository.save(event1);
         eventRepository.save(event2);
 
         Debt debt = Debt.builder()
                 .title("Pitsa")
-                .createdAt(LocalDateTime.now())
                 .payer(person2)
                 .receiver(person)
                 .owner(person)
-                .currency(Currency.getInstance("EUR"))
+                .status(DebtStatus.CONFIRMED)
                 .sum(new BigDecimal(8)).build();
         Debt debt1 = Debt.builder()
                 .title("Kütuseraha")
-                .createdAt(LocalDateTime.now())
                 .payer(person1)
                 .receiver(person2)
                 .owner(person1)
-                .currency(Currency.getInstance("EUR"))
+                .status(DebtStatus.ACCEPTED)
                 .sum(new BigDecimal(35)).build();
         Debt debt2 = Debt.builder()
                 .title("Snäkid")
                 .payer(person)
                 .owner(person2)
-                .createdAt(LocalDateTime.now())
                 .receiver(person2)
-                .currency(Currency.getInstance("EUR"))
+                .status(DebtStatus.NEW)
                 .sum(new BigDecimal(23)).build();
         Debt debt3 = Debt.builder()
                 .payer(person)
                 .title("Kinopiletid ja popcorn")
-                .createdAt(LocalDateTime.now())
                 .receiver(person3)
-                .currency(Currency.getInstance("EUR"))
+                .status(DebtStatus.PAID)
                 .sum(new BigDecimal(55)).build();
+        Debt debt4 = Debt.builder()
+                .payer(person)
+                .title("Õhtusöök vapis")
+                .receiver(person1)
+                .status(DebtStatus.ACCEPTED)
+                .sum(new BigDecimal(32.1)).build();
+        Debt debt5 = Debt.builder()
+                .payer(person2)
+                .title("Daily kohv")
+                .receiver(person)
+                .status(DebtStatus.DECLINED)
+                .sum(new BigDecimal(1.50)).build();
+        Debt debt6 = Debt.builder()
+                .payer(person)
+                .title("Räägu burx")
+                .receiver(person2)
+                .status(DebtStatus.PAID)
+                .sum(new BigDecimal(4.80)).build();
+        Debt debt7 = Debt.builder()
+                .payer(person)
+                .title("Labori joogid")
+                .receiver(person1)
+                .status(DebtStatus.NEW)
+                .sum(new BigDecimal(16)).build();
 
-        debtRepository.save(debt);
-        debtRepository.save(debt1);
-        debtRepository.save(debt2);
-        debtRepository.save(debt3);
+        debtRepository.saveAll(Arrays.asList(debt, debt1, debt2, debt3, debt4, debt5, debt6, debt7));
 
 
         contactService.addContact(person.getId(), person1.getId());
