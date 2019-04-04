@@ -32,7 +32,9 @@ public class DebtDistributionService {
             for (BillPayment billPayment : bill.getBillPayments()) {
                 from = billPayment.getPerson();
                 sum = billPayment.getSum();
-                graph.addRelation(sum, from, to);
+                if (sum.compareTo(BigDecimal.ZERO) != 0) {
+                    graph.addRelation(sum, from, to);
+                }
             }
         }
 

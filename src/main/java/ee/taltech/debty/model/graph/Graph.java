@@ -15,12 +15,14 @@ public class Graph {
     private Map<Person, Vertex> people = new HashMap<>();
     private List<Edge> edges = new ArrayList<>();
 
+    private final static int EQUAL = 0;
+
     public Graph(List<Person> people) {
         people.forEach(person -> this.people.put(person, new Vertex(person)));
     }
 
     public void addRelation(BigDecimal sum, Person from, Person to) {
-        if (to == from) return;
+        if (to == from || sum.compareTo(BigDecimal.ZERO) == EQUAL) return;
         Edge edge = new Edge(sum, from, to);
         this.edges.add(edge);
         this.people.get(from).getOutgoingEdges().add(edge);
@@ -53,19 +55,19 @@ public class Graph {
             from = edge.getFrom();
             to = edge.getTo();
 
-            fromToSumMap.putIfAbsent(from, new HashMap<>());
-            fromToSumMap.get(from).putIfAbsent(to, BigDecimal.ZERO);
+            if (edge.getSum().compareTo(BigDecimal.ZERO) != EQUAL) {
+                fromToSumMap.putIfAbsent(from, new HashMap<>());
+                fromToSumMap.get(from).putIfAbsent(to, BigDecimal.ZERO);
 
-            fromToSumMap.get(from).put(to, fromToSumMap.get(from).get(to).add(edge.getSum()));
+                fromToSumMap.get(from).put(to, fromToSumMap.get(from).get(to).add(edge.getSum()));
+            }
         }
 
         this.edges = new ArrayList<>();
         for (Person fromPerson : fromToSumMap.keySet()) {
             for (Person toPerson : fromToSumMap.get(fromPerson).keySet()) {
                 BigDecimal sum = fromToSumMap.get(fromPerson).get(toPerson);
-                if (!sum.equals(BigDecimal.ZERO)) {
-                    this.edges.add(new Edge(sum, fromPerson, toPerson));
-                }
+                this.edges.add(new Edge(sum, fromPerson, toPerson));
             }
         }
     }
@@ -95,7 +97,6 @@ public class Graph {
         BigDecimal incSum = Objects.requireNonNull(minIncoming).getSum();
         BigDecimal outSum = Objects.requireNonNull(minOutgoing).getSum();
         int compareTo = incSum.compareTo(outSum);
-        final int EQUAL = 0;
 
         Person from = minIncoming.getFrom();
         Person to = minOutgoing.getTo();
