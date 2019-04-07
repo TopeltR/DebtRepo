@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 
-@RestController("/debts")
+@RestController
+@RequestMapping("/debts")
 public class DebtController {
 
     private final DebtService debtService;

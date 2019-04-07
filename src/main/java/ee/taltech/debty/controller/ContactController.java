@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@RestController("/contacts")
+@RestController
+@RequestMapping("/contacts")
 public class ContactController {
     private final ContactService contactService;
     private final UserService userService;
@@ -20,9 +21,7 @@ public class ContactController {
 
     @GetMapping("/all/{id}")
     public List<Person> getAllAvailableContacts(@PathVariable("id") Long id) {
-        Optional<Person> personOptional = userService.getUserById(id);
-        Person person = new Person();
-        if (personOptional.isPresent()) person = personOptional.get();
+        Person person = userService.getUserById(id).orElse(new Person());
         return contactService.getAllAvailableContacts(person);
     }
 

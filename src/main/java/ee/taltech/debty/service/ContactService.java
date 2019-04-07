@@ -5,6 +5,7 @@ import ee.taltech.debty.entity.Person;
 import ee.taltech.debty.repository.ContactRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -23,10 +24,19 @@ public class ContactService {
         List<Person> userList = userService.getAllUsers();
         userList.remove(person);
 
+        List<Person> contactList = getContactList(person);
+        return getAvailableContacts(userList, contactList);
+    }
+
+    private List<Person> getContactList(Person person) {
         List<Person> contactList = new ArrayList<>();
         contactRepository.findAllByTo(person).forEach(contact -> contactList.add(contact.getFrom()));
-        contactRepository.findAllByFrom(person).forEach(contact -> contactList.add(contact.getTo()));
 
+        contactRepository.findAllByFrom(person).forEach(contact -> contactList.add(contact.getTo()));
+        return contactList;
+    }
+
+    private List<Person> getAvailableContacts(List<Person> userList, List<Person> contactList) {
         List<Person> availableContacts = new ArrayList<>();
         userList.forEach(user -> {
             if (!contactList.contains(user)) availableContacts.add(user);
@@ -38,14 +48,17 @@ public class ContactService {
         Optional<Person> personOptional1 = userService.getUserById(personId1);
         Optional<Person> personOptional2 = userService.getUserById(personId2);
         if (personOptional1.isPresent() && personOptional2.isPresent()) {
-            Person person1 = personOptional1.get();
-            Person person2 = personOptional2.get();
-            Contact contact = new Contact();
-            contact.setFrom(person1);
-            contact.setTo(person2);
-            contact.setAccepted(false);
+            Contact contact = createContact(personOptional1.get(), personOptional2.get());
             contactRepository.save(contact);
         }
+    }
+
+    private Contact createContact(Person person1, Person person2) {
+        Contact contact = new Contact();
+        contact.setFrom(person1);
+        contact.setTo(person2);
+        contact.setAccepted(false);
+        return contact;
     }
 
     public List<Person> getAllContacts(Person person) {

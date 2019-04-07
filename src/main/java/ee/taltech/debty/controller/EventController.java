@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController("/events")
 @RequiredArgsConstructor
+@RequestMapping("/events")
 public class EventController {
 
     private final EventService eventService;

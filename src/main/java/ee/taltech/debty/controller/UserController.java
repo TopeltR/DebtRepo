@@ -20,6 +20,7 @@ import java.security.Principal;
 
 @RestController("/users")
 @RequiredArgsConstructor
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
