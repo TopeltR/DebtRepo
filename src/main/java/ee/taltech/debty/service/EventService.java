@@ -34,6 +34,11 @@ public class EventService {
         return eventRepository.findById(id);
     }
 
+    public void deleteEventById(Long id) {
+        Optional<Event> eventOptional = getEventById(id);
+        eventOptional.ifPresent(eventRepository::delete);
+    }
+
     public List<Event> getAllEventsByUserId(Long userId) {
         Optional<Person> userOptional = userService.getUserById(userId);
         if (userOptional.isPresent()) return eventRepository.findAllByPeopleContaining(userOptional.get());

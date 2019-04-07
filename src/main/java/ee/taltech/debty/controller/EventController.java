@@ -3,22 +3,18 @@ package ee.taltech.debty.controller;
 import ee.taltech.debty.entity.Bill;
 import ee.taltech.debty.entity.Debt;
 import ee.taltech.debty.entity.Event;
-import ee.taltech.debty.service.BillService;
 import ee.taltech.debty.service.EventService;
-import ee.taltech.debty.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
 public class EventController {
 
     private final EventService eventService;
-    private final BillService billService;
 
     @GetMapping("/events/all")
     public List<Event> getAllEvents() {
@@ -33,6 +29,11 @@ public class EventController {
     @GetMapping("/events/{id}")
     public Event getEventById(@PathVariable("id") Long id) {
         return eventService.getEventById(id).orElseGet(Event::new);
+    }
+
+    @DeleteMapping("/events/{id}")
+    public void deleteEventById(@PathVariable("id") Long id) {
+        eventService.deleteEventById(id);
     }
 
     @PostMapping("/events/{id}/bills")
