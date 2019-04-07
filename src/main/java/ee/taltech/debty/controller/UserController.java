@@ -21,6 +21,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -40,30 +41,30 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(person);
     }
 
-    @GetMapping("/users/loggedIn")
+    @GetMapping("/loggedIn")
     public Person getLoggedInUser(Principal principal) {
         String email = principal.getName();
         if (!userService.emailExists(email)) return null;
         return userService.getUserByEmail(email);
     }
 
-    @GetMapping("/users/email/{email}")
+    @GetMapping("/email/{email}")
     public Person getUserByEmail(@Email @PathVariable("email") String email) {
         if (!userService.emailExists(email)) return new Person();
         return userService.getUserByEmail(email);
     }
 
-    @GetMapping("/users/id/{id}")
+    @GetMapping("/id/{id}")
     public Person getUserById(@PathVariable("id") Long id) {
         return userService.getUserById(id).orElseGet(Person::new);
     }
 
-    @PutMapping("/users")
+    @PutMapping("/")
     public Person updateUser(@RequestBody PersonDto user) {
         return userService.updateUser(user);
     }
 
-    @PostMapping("/users/bankAccount/{userId}")
+    @PostMapping("/bankAccount/{userId}")
     public void addBankAccountForUser(@PathVariable("userId") Long userId, @RequestBody BankAccount bankAccount) {
         userService.addBankAccountForUser(bankAccount, userId);
     }
