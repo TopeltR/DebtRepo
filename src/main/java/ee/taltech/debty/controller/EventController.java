@@ -10,53 +10,53 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
 
-@RestController
+@RestController("/events")
 @RequiredArgsConstructor
 public class EventController {
 
     private final EventService eventService;
 
-    @GetMapping("/events/all")
+    @GetMapping("/all")
     public List<Event> getAllEvents() {
         return eventService.getAllEvents();
     }
 
-    @PostMapping("/events")
+    @PostMapping("/")
     public Event addEvent(@RequestBody Event event) {
         return eventService.saveEvent(event);
     }
 
-    @GetMapping("/events/{id}")
+    @GetMapping("/{id}")
     public Event getEventById(@PathVariable("id") Long id) {
         return eventService.getEventById(id).orElseGet(Event::new);
     }
 
-    @DeleteMapping("/events/{id}")
+    @DeleteMapping("/{id}")
     public void deleteEventById(@PathVariable("id") Long id) {
         eventService.deleteEventById(id);
     }
 
-    @PostMapping("/events/{id}/bills")
+    @PostMapping("/{id}/bills")
     public Event addBill(@PathVariable("id") Long id, @RequestBody Bill bill) {
         return eventService.addOrUpdateBill(id, bill);
     }
 
-    @DeleteMapping("/events/{id}/bills/{billId}")
+    @DeleteMapping("/{id}/bills/{billId}")
     public void addBill(@PathVariable("id") Long id, @PathVariable("billId") Long billId) {
         eventService.deleteBillFromEvent(id, billId);
     }
 
-    @GetMapping("/events/user/{userId}")
+    @GetMapping("/user/{userId}")
     public List<Event> getAllEventsByUserId(@PathVariable("userId") Long userId) {
         return eventService.getAllEventsByUserId(userId);
     }
 
-    @GetMapping("/events/{eventId}/debts")
+    @GetMapping("/{eventId}/debts")
     public List<Debt> getDistributedDebtCalculation(@PathVariable("eventId") Long eventId) {
         return eventService.calculateDistributedDebts(eventId);
     }
 
-    @PostMapping("/events/{eventId}/close")
+    @PostMapping("/{eventId}/close")
     public Event closeEvent(@PathVariable("eventId") Long eventId, Principal principal) {
         return eventService.closeEventAndSaveNewDebts(eventId, principal.getName());
     }

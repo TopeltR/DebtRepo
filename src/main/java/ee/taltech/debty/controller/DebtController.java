@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 
-@RestController
+@RestController("/debts")
 public class DebtController {
 
     private final DebtService debtService;
@@ -16,32 +16,32 @@ public class DebtController {
         this.debtService = debtService;
     }
 
-    @PostMapping("/debts")
+    @PostMapping("/")
     public Debt saveDebt(@RequestBody Debt debt) {
         return debtService.saveDebt(debt);
     }
 
-    @GetMapping("/debts/all")
+    @GetMapping("/all")
     public List<Debt> getAllDebts() {
         return debtService.getAllDebts();
     }
 
-    @GetMapping("/debts/{id}")
+    @GetMapping("/{id}")
     public Debt getDebtById(@PathVariable("id") Long id) {
         return debtService.getDebtById(id).orElseGet(Debt::new);
     }
 
-    @GetMapping("/debts/user/{userId}")
+    @GetMapping("/user/{userId}")
     public List<Debt> getAllDebtsByUserId(@PathVariable("userId") Long userId) {
         return debtService.getAllDebtsByUserId(userId);
     }
 
-    @DeleteMapping("/debts/{id}")
+    @DeleteMapping("/{id}")
     public void deleteDebt(@PathVariable("id") Long id) {
         debtService.deleteDebt(id);
     }
 
-    @GetMapping("/debts/user/{userId}/total")
+    @GetMapping("/user/{userId}/total")
     public BigDecimal getTotalDebtBalance(@PathVariable("userId") Long userId) {
         return debtService.getTotalDebtBalanceForUser(userId);
     }

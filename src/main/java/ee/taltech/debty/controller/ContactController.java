@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@RestController
+@RestController("/contacts")
 public class ContactController {
     private final ContactService contactService;
     private final UserService userService;
@@ -18,7 +18,7 @@ public class ContactController {
         this.userService = userService;
     }
 
-    @GetMapping("/contact/all/{id}")
+    @GetMapping("/all/{id}")
     public List<Person> getAllAvailableContacts(@PathVariable("id") Long id) {
         Optional<Person> personOptional = userService.getUserById(id);
         Person person = new Person();
@@ -26,17 +26,17 @@ public class ContactController {
         return contactService.getAllAvailableContacts(person);
     }
 
-    @PostMapping("/contact/add/{toId}/{contactId}")
+    @PostMapping("/add/{toId}/{contactId}")
     public void addContact(@PathVariable("toId") Long id, @PathVariable("contactId") Long contactId) {
         contactService.addContact(id, contactId);
     }
 
-    @DeleteMapping("/contact/remove/{fromId}/{contactId}")
+    @DeleteMapping("/remove/{fromId}/{contactId}")
     public void removeContact(@PathVariable("fromId") Long fromId, @PathVariable("contactId") Long contactId) {
          contactService.removeContactById(fromId, contactId);
     }
 
-    @GetMapping("/contact/id/{id}")
+    @GetMapping("/id/{id}")
     public List<Person> getAllUserContacts(@PathVariable("id") Long id) {
         Optional<Person> personOptional = userService.getUserById(id);
         Person person = new Person();
@@ -44,12 +44,12 @@ public class ContactController {
         return contactService.getAllContacts(person);
     }
 
-    @GetMapping("/contact/waiting/{id}")
+    @GetMapping("/waiting/{id}")
     public List<Person> getAllWaitingContacts(@PathVariable("id") Long id) {
         return contactService.getIncomingRequests(id);
     }
 
-    @PostMapping("/contact/accept/{toId}/{fromId}")
+    @PostMapping("/accept/{toId}/{fromId}")
     public void acceptContact(@PathVariable("toId") Long toId, @PathVariable("fromId") Long fromId) {
         contactService.acceptContactForPersonFromPerson(toId, fromId);
     }
