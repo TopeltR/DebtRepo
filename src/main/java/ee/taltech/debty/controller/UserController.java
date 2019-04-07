@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.constraints.Email;
 import java.security.Principal;
 
-@RestController("/users")
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
