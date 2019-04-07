@@ -19,6 +19,7 @@ public class EventService {
 
     private final UserService userService;
     private final DebtService debtService;
+    private final BillService billService;
     private final EventRepository eventRepository;
     private final DebtDistributionService debtDistributionService;
 
@@ -67,16 +68,28 @@ public class EventService {
     }
 
     public Event addOrUpdateBill(Long eventId, Bill bill) {
+        Optional<Event> eventOptional = removeBillFromEvent(eventId, bill.getId());
+        if (!eventOptional.isPresent()) return null;
+
+        Event event = eventOptional.get();
+        event.getBills().add(bill);
+        return saveEvent(event);
+    }
+
+    public void deleteBillFromEvent(Long eventId, Long billId) {
+        removeBillFromEvent(eventId, billId);
+        billService.deleteBillById(billId);
+    }
+
+    private Optional<Event> removeBillFromEvent(Long eventId, Long billId) {
         Optional<Event> eventById = getEventById(eventId);
-        if (!eventById.isPresent()) return null;
+        if (!eventById.isPresent()) return Optional.empty();
         Event event = eventById.get();
-        Optional<Bill> billOptional = event.getBills().stream().filter(b -> b.getId().equals(bill.getId())).findFirst();
+        Optional<Bill> billOptional = event.getBills().stream().filter(b -> b.getId().equals(billId)).findFirst();
         if (billOptional.isPresent()) {
             Bill b = billOptional.get();
             event.getBills().remove(b);
         }
-        event.getBills().add(bill);
-
-        return saveEvent(event);
+        return Optional.of(event);
     }
 }

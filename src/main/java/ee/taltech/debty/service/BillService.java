@@ -13,8 +13,12 @@ public class BillService {
     private final BillRepository billRepository;
     private final BillPaymentRepository billPaymentRepository;
 
-    public Bill saveBill(Bill bill) {
+    Bill saveBill(Bill bill) {
         billPaymentRepository.saveAll(bill.getBillPayments());
         return billRepository.save(bill);
+    }
+
+    void deleteBillById(Long id) {
+        billRepository.findById(id).ifPresent(billRepository::delete);
     }
 }

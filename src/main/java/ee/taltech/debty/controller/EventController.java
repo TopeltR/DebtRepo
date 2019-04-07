@@ -41,6 +41,11 @@ public class EventController {
         return eventService.addOrUpdateBill(id, bill);
     }
 
+    @DeleteMapping("/events/{id}/bills/{billId}")
+    public void addBill(@PathVariable("id") Long id, @PathVariable("billId") Long billId) {
+        eventService.deleteBillFromEvent(id, billId);
+    }
+
     @GetMapping("/events/user/{userId}")
     public List<Event> getAllEventsByUserId(@PathVariable("userId") Long userId) {
         return eventService.getAllEventsByUserId(userId);
