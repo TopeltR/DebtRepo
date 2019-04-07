@@ -1,5 +1,6 @@
 package ee.taltech.debty.controller;
 
+import ee.taltech.debty.entity.Contact;
 import ee.taltech.debty.entity.Person;
 import ee.taltech.debty.service.ContactService;
 import ee.taltech.debty.service.UserService;
@@ -26,26 +27,31 @@ public class ContactController {
     }
 
     @PostMapping("/add/{toId}/{contactId}")
-    public void addContact(@PathVariable("toId") Long id, @PathVariable("contactId") Long contactId) {
-        contactService.addContact(id, contactId);
+    public void acceptRequest(@PathVariable("toId") Long id, @PathVariable("contactId") Long contactId) {
+        contactService.acceptContact(id, contactId);
     }
 
     @DeleteMapping("/remove/{fromId}/{contactId}")
-    public void removeContact(@PathVariable("fromId") Long fromId, @PathVariable("contactId") Long contactId) {
+    public void declineRequest(@PathVariable("fromId") Long fromId, @PathVariable("contactId") Long contactId) {
          contactService.removeContactById(fromId, contactId);
     }
 
-    @GetMapping("/id/{id}")
-    public List<Person> getAllUserContacts(@PathVariable("id") Long id) {
+    @GetMapping("/{id}")
+    public List<Contact> getAllUserContacts(@PathVariable("id") Long id) {
         Optional<Person> personOptional = userService.getUserById(id);
         Person person = new Person();
         if (personOptional.isPresent()) person = personOptional.get();
         return contactService.getAllContacts(person);
     }
 
-    @GetMapping("/waiting/{id}")
-    public List<Person> getAllWaitingContacts(@PathVariable("id") Long id) {
+    @GetMapping("/incoming/{id}")
+    public List<Person> getAllIncomingContacts(@PathVariable("id") Long id) {
         return contactService.getIncomingRequests(id);
+    }
+
+    @GetMapping("/outgoing/{id}")
+    public List<Person> getAllOutgoingContacts(@PathVariable("id") Long id) {
+        return contactService.getOutgoingRequests(id);
     }
 
     @PostMapping("/accept/{toId}/{fromId}")

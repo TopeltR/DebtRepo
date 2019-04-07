@@ -46,7 +46,7 @@ public class ContactsServiceTest {
 
         Contact contact = Contact.builder().from(person1).to(person2).isAccepted(false).build();
 
-        contactService.addContact(1L, 2L);
+        contactService.acceptContact(1L, 2L);
 
         verify(contactRepository).save(contact);
     }
@@ -58,7 +58,7 @@ public class ContactsServiceTest {
 
         Contact contact = Contact.builder().from(person1).to(person2).isAccepted(false).build();
 
-        contactService.addContact(1L, 2L);
+        contactService.acceptContact(1L, 2L);
 
         verify(contactRepository, never()).save(contact);
     }

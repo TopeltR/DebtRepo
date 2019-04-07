@@ -5,7 +5,6 @@ import ee.taltech.debty.entity.Person;
 import ee.taltech.debty.repository.ContactRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ public class ContactService {
         return availableContacts;
     }
 
-    public void addContact(Long personId1, Long personId2) {
+    public void acceptContact(Long personId1, Long personId2) {
         Optional<Person> personOptional1 = userService.getUserById(personId1);
         Optional<Person> personOptional2 = userService.getUserById(personId2);
         if (personOptional1.isPresent() && personOptional2.isPresent()) {
@@ -61,21 +60,10 @@ public class ContactService {
         return contact;
     }
 
-    public List<Person> getAllContacts(Person person) {
-        List<Contact> contacts = contactRepository.findAllByFrom(person);
-        contacts.addAll(contactRepository.findAllByTo(person));
-        List<Person> contactPersonList = new ArrayList<>();
-        contactPersonList.addAll(
-                contacts.stream()
-                        .filter(contact -> contact.isAccepted() && contact.getFrom() == person)
-                        .map(Contact::getTo)
-                        .collect(Collectors.toList()));
-        contactPersonList.addAll(
-                contacts.stream()
-                        .filter(contact -> contact.isAccepted() && contact.getTo() == person)
-                        .map(Contact::getFrom)
-                        .collect(Collectors.toList()));
-        return contactPersonList;
+    public List<Contact> getAllContacts(Person person) {
+        List<Contact> contacts = contactRepository.findAllByFromOrTo(person, person);
+        return contacts.stream().filter(Contact::isAccepted).collect(Collectors.toList());
+
     }
 
     public void acceptContactForPersonFromPerson(Long toId, Long fromId) {
@@ -105,11 +93,25 @@ public class ContactService {
         return new ArrayList<>();
     }
 
+    public List<Person> getOutgoingRequests(Long id) {
+        Optional<Person> person = userService.getUserById(id);
+        List<Contact> contacts;
+        if (person.isPresent()) {
+            contacts = contactRepository.findAllByFrom(person.get());
+            return contacts
+                    .stream()
+                    .filter(i -> !i.isAccepted())
+                    .map(Contact::getTo)
+                    .collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
     @Transactional
     public void removeContactById(Long fromId, Long toId) {
         Optional<Person> fromPerson = userService.getUserById(fromId);
         Optional<Person> toPerson = userService.getUserById(toId);
-        if(fromPerson.isPresent() && toPerson.isPresent()) {
+        if (fromPerson.isPresent() && toPerson.isPresent()) {
             contactRepository.removeByFromAndTo(fromPerson.get(), toPerson.get());
             contactRepository.removeByFromAndTo(toPerson.get(), fromPerson.get());
         }
