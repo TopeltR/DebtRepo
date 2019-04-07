@@ -13,7 +13,7 @@ import java.util.List;
 @ToString
 public class Event {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToMany
     private List<Person> people;
