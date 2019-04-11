@@ -59,4 +59,3 @@ public class ContactController {
         contactService.acceptContactForPersonFromPerson(toId, fromId);
     }
 }
-
