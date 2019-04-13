@@ -44,5 +44,4 @@ public class BillServiceTest {
         verify(billPaymentRepository).saveAll(billPayments);
         assertEquals(bill, returnedBill);
     }
-
 }

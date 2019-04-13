@@ -63,26 +63,6 @@ public class ContactsServiceTest {
         verify(contactRepository, never()).save(contact);
     }
 
-    @Test
-    public void getAllContacts_withPeopleNotExisting_shouldNotReturnAnyPeople() {
-        when(contactRepository.findAllByFrom(person1)).thenReturn(Collections.emptyList());
-        when(contactRepository.findAllByTo(person1)).thenReturn(Collections.emptyList());
-
-        List<Person> people = contactService.getAllContacts(person1);
-
-        assertEquals(Collections.emptyList(), people);
-    }
-
-    @Test
-    public void getAllContacts_withPeopleExisting_shouldReturnPeople() {
-        Contact contact = Contact.builder().from(person1).to(person2).isAccepted(true).build();
-        when(contactRepository.findAllByFrom(person1)).thenReturn(Collections.singletonList(contact));
-        when(contactRepository.findAllByTo(person1)).thenReturn(Collections.emptyList());
-
-        List<Person> people = contactService.getAllContacts(person1);
-
-        assertEquals(1, people.size());
-    }
 
     @Test
     public void acceptContact_withExistingContact_shouldCreateAcceptedContact() {

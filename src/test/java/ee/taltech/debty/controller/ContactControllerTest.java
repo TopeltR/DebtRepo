@@ -55,13 +55,4 @@ public class ContactControllerTest {
         assertEquals(Collections.emptyList(), contactController.getAllUserContacts(3L));
     }
 
-    @Test
-    public void getAllUserContacts_whenOneContactExists_returnArrayWithOneObject() {
-        when(userService.getUserById(3L)).thenReturn(Optional.of(person));
-        when(contactService.getAllContacts(person)).thenReturn(Collections.singletonList(person));
-
-
-        assertEquals(1, contactController.getAllUserContacts(3L).size());
-    }
-
 }
