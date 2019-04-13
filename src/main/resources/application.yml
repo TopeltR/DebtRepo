@@ -7,9 +7,9 @@
 spring:
     datasource:
         driver-class-name: org.postgresql.Driver
-        password: projekt
-        url: jdbc:postgresql://esport.pld.ttu.ee:27001/debty
-        username: postgres
+        password: monster123
+        url: jdbc:postgresql://debtybackdb.cdr3c8itgucr.us-east-1.rds.amazonaws.com:5432/debty
+        username: rasmus
 
     jpa:
         properties:
