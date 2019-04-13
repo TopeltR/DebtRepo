@@ -8,7 +8,7 @@ import ee.taltech.debty.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +34,6 @@ public class UserController {
         }
 
         Person person = userService.saveNewUser(userForm);
-
         securityService.autoLogin(userForm.getEmail(), userForm.getPasswordConfirmation());
 
         return ResponseEntity.status(HttpStatus.OK).body(person);
@@ -43,38 +42,36 @@ public class UserController {
     @GetMapping("/loggedIn")
     public Person getLoggedInUser(Principal principal) {
         String email = principal.getName();
-        if (!userService.emailExists(email)) return null;
-        return userService.getUserByEmail(email);
+        return userService.getUserByEmail(email).orElse(null);
     }
 
     @GetMapping("/email/{email}")
+    @PreAuthorize("@permissionEvaluator.isUserByEmail(#email)")
     public Person getUserByEmail(@Email @PathVariable("email") String email) {
-        if (!userService.emailExists(email)) return new Person();
-        return userService.getUserByEmail(email);
+        return userService.getUserByEmail(email).orElse(new Person());
     }
 
     @GetMapping("/id/{id}")
+    @PreAuthorize("@permissionEvaluator.isUserById(#id)")
     public Person getUserById(@PathVariable("id") Long id) {
         return userService.getUserById(id).orElseGet(Person::new);
     }
 
     @PutMapping("/")
+    @PreAuthorize("@permissionEvaluator.isUserById(#user.id)")
     public Person updateUser(@RequestBody PersonDto user) {
         return userService.updateUser(user);
     }
 
-    @PostMapping("/bankAccount/{userId}")
-    public void addBankAccountForUser(@PathVariable("userId") Long userId, @RequestBody BankAccount bankAccount) {
-        userService.addBankAccountForUser(bankAccount, userId);
-    }
-
-    void clearSecurityContext() {
-        SecurityContextHolder.clearContext();
+    @PostMapping("/bankAccount/{id}")
+    @PreAuthorize("@permissionEvaluator.isUserById(#id)")
+    public void addBankAccountForUser(@PathVariable("id") Long id, @RequestBody BankAccount bankAccount) {
+        userService.addBankAccountForUser(bankAccount, id);
     }
 
     @PostMapping("/signout")
     public void logoutDo(HttpServletRequest request) {
-        clearSecurityContext();
+        securityService.clearSecurityContext();
 
         HttpSession session = request.getSession(false);
         if (session != null) session.invalidate();

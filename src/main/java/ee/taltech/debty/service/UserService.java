@@ -20,7 +20,7 @@ public class UserService {
     private final PersonRepository personRepository;
 
     void setParamsFromDto(Person person, PersonDto personDto) {
-        if (getUserByEmail(personDto.getEmail()) == null) {
+        if (!getUserByEmail(personDto.getEmail()).isPresent()) {
             person.setEmail(personDto.getEmail());
         }
         person.setFirstName(personDto.getFirstName());
@@ -32,21 +32,22 @@ public class UserService {
 
     Person toUser(PersonDto personDto) {
         Person person = new Person();
-        setParamsFromDto(person, personDto);
+        this.setParamsFromDto(person, personDto);
         return person;
     }
 
     public Person saveNewUser(PersonDto personDto) {
-        Person person = toUser(personDto);
+        Person person = this.toUser(personDto);
         personRepository.save(person);
         return person;
     }
 
-    Person saveUser(Person person) {
-        return personRepository.save(person);
+    void saveUser(Person person) {
+        person.setModifiedAt(LocalDateTime.now());
+        personRepository.save(person);
     }
 
-    public Person getUserByEmail(String email) {
+    public Optional<Person> getUserByEmail(String email) {
         return personRepository.findByEmail(email);
     }
 
@@ -59,28 +60,27 @@ public class UserService {
     }
 
     public boolean emailExists(String email) {
-        return personRepository.findByEmail(email) != null;
+        return personRepository.findByEmail(email).isPresent();
     }
 
     public void addBankAccountForUser(BankAccount bankAccount, Long personId) {
+        Optional<Person> personOptional = personRepository.findById(personId);
+        if (!personOptional.isPresent()) return;
+        Person person = personOptional.get();
 
-        Person person = personRepository.findById(personId).orElseGet(Person::new);
-        if (!person.getId().equals(personId)) return;
-
-        bankAccount.setCreatedAt(LocalDateTime.now());
         bankAccount.setModified(LocalDateTime.now());
 
         person.setModifiedAt(LocalDateTime.now());
         person.setBankAccount(bankAccount);
         personRepository.save(person);
     }
+
     public Person updateUser(PersonDto personDto) {
         Optional<Person> personOptional = getUserById(personDto.getId());
-        if (personOptional.isPresent()) {
-            Person person = personOptional.get();
-            setParamsFromDto(person, personDto);
-            return personRepository.save(person);
-        }
-        return null;
+        if (!personOptional.isPresent()) return null;
+
+        Person person = personOptional.get();
+        setParamsFromDto(person, personDto);
+        return personRepository.save(person);
     }
 }

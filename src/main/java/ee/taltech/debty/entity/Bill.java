@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Currency;
@@ -20,18 +21,27 @@ public class Bill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
     private String title;
-    private String description;
+    @NotNull
     @ManyToOne
     private Person creator;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+    @NotNull
     private BigDecimal sum;
-    private Currency currency;
+    @NotNull
+    private Currency currency = Currency.getInstance("EUR");
+    @NotNull
     @ManyToOne
     private Person buyer;
+
+    private String description;
+    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime modifiedAt;
+
+    @NotNull
     @ManyToMany
     private List<Person> people;
+    @NotNull
     @ManyToMany(cascade = CascadeType.ALL)
     private List<BillPayment> billPayments;
 }

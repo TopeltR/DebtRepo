@@ -19,13 +19,13 @@ public class SecurityService {
         this.userDetailsService = userDetailsService;
     }
 
-    public String findLoggedInUsername() {
-        Object userDetails = SecurityContextHolder.getContext().getAuthentication().getDetails();
-        if (userDetails instanceof UserDetails) {
-            return ((UserDetails)userDetails).getUsername();
+    String findLoggedInUsername() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            return ((UserDetails) principal).getUsername();
+        } else {
+            return principal.toString();
         }
-
-        return null;
     }
 
     public void autoLogin(String username, String password) {
@@ -37,5 +37,9 @@ public class SecurityService {
         if (usernamePasswordAuthenticationToken.isAuthenticated()) {
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         }
+    }
+
+    public void clearSecurityContext() {
+        SecurityContextHolder.clearContext();
     }
 }

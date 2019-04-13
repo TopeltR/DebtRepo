@@ -23,18 +23,19 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class DebtServiceTest {
 
+    @Spy
+    @InjectMocks
+    private DebtService debtService;
+
     @Mock
     private UserService userService;
 
     @Mock
     private DebtRepository debtRepository;
 
-    @Spy
-    @InjectMocks
-    private DebtService debtService;
-
-    private Person person = Person.builder().firstName("Bob").lastName("Builder")
-            .id(3L).build();
+    private Person person = Person.builder().firstName("Bob").lastName("Builder").id(3L).build();
+    private Debt debt1 = Debt.builder().id(1L).title("Test debt").payer(person).build();
+    private Debt debt2 = Debt.builder().id(2L).title("Test debt").payer(person).build();
 
     @Test
     public void saveDebt_savesDebt() {
@@ -48,22 +49,14 @@ public class DebtServiceTest {
 
     @Test
     public void saveDebts_savesAllDebts() {
-        Debt debt = new Debt();
-        debt.setId(1L);
-        debt.setTitle("Test debt");
-        debt.setPayer(person);
+        debtService.saveDebts(Arrays.asList(debt1, debt2));
 
-        Debt debt1 = new Debt();
-        debt.setId(2L);
-        debt.setTitle("Test debt2");
-
-        debtService.saveDebts(Arrays.asList(debt, debt1));
-        assertNotNull(debt.getModifiedAt());
-        verify(debtRepository).saveAll(Arrays.asList(debt, debt1));
+        assertNotNull(debt1.getModifiedAt());
+        verify(debtRepository, times(2)).save(any());
     }
 
     @Test
-    public void getAllDebtsByUserId_whenNoUser_returnsEmptyArrayList() {
+    public void getAllDebtsByUserId_withNoUser_returnsEmptyArrayList() {
         when(userService.getUserById(3L)).thenReturn(Optional.empty());
 
         List<Debt> debtList = debtService.getAllDebtsByUserId(3L);

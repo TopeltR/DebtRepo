@@ -1,9 +1,12 @@
 package ee.taltech.debty.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,19 +14,28 @@ import java.util.List;
 @Data
 @Entity
 @ToString
+@NoArgsConstructor
 public class Event {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToMany
-    private List<Person> people;
+
+    @NonNull
     @ManyToOne
     private Person owner;
+
+    @NotNull
     private String title;
+
     private String description;
-    private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime closedAt;
-    private LocalDateTime modifiedAt;
+
     @OneToMany(cascade = CascadeType.ALL)
     private List<Bill> bills = new ArrayList<>();
+    @ManyToMany
+    private List<Person> people;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime modifiedAt;
+    private LocalDateTime closedAt;
 }

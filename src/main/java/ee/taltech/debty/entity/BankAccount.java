@@ -2,14 +2,17 @@ package ee.taltech.debty.entity;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
 @Embeddable
 public class BankAccount {
+    @NotNull
     private String number;
+    @NotNull
     private String name;
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime modified;
 }

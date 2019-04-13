@@ -4,6 +4,7 @@ import ee.taltech.debty.entity.Debt;
 import ee.taltech.debty.entity.Person;
 import ee.taltech.debty.model.DebtStatus;
 import ee.taltech.debty.repository.DebtRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -13,15 +14,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class DebtService {
 
     private final DebtRepository debtRepository;
     private final UserService userService;
-
-    public DebtService(DebtRepository debtRepository, UserService userService) {
-        this.debtRepository = debtRepository;
-        this.userService = userService;
-    }
 
     public Debt saveDebt(Debt debt) {
         if (debt.getPayer().getId() == null) userService.saveUser(debt.getPayer());
@@ -35,12 +32,7 @@ public class DebtService {
     }
 
     void saveDebts(List<Debt> debts) {
-        debts.forEach(d -> d.setModifiedAt(LocalDateTime.now()));
-        debtRepository.saveAll(debts);
-    }
-
-    public List<Debt> getAllDebts() {
-        return debtRepository.findAll();
+        debts.forEach(this::saveDebt);
     }
 
     public Optional<Debt> getDebtById(Long id) {

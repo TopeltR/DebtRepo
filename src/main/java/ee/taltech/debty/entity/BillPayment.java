@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -20,7 +21,9 @@ public class BillPayment {
     private Long id;
     @ManyToOne
     private Person person;
+    @NotNull
     private BigDecimal sum;
-    private LocalDateTime createdAt;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime modifiedAt;
 }

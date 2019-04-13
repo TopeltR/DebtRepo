@@ -4,20 +4,20 @@ import ee.taltech.debty.entity.Bill;
 import ee.taltech.debty.entity.Event;
 import ee.taltech.debty.entity.Person;
 import ee.taltech.debty.repository.EventRepository;
-import ee.taltech.debty.repository.PersonRepository;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.util.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EventServiceTest {
@@ -44,21 +44,6 @@ public class EventServiceTest {
         event.setPeople(Arrays.asList(person,person2));
         eventService.saveEvent(event);
         verify(eventRepository).save(event);
-    }
-
-    @Test
-    public void getAllEvents_shouldReturnTwoEvents() {
-        Event event = new Event();
-        event.setTitle("Test event 1");
-        event.setId(1L);
-        Event event1 = new Event();
-        event.setTitle("Test event 2");
-        event.setId(2L);
-
-        eventService.saveEvent(event);
-        eventService.saveEvent(event1);
-        when(eventRepository.findAll()).thenReturn(Arrays.asList(event,event1));
-        assertEquals(eventService.getAllEvents(),Arrays.asList(event,event1));
     }
 
     @Test
@@ -142,7 +127,7 @@ public class EventServiceTest {
         bill.setId(1L);
         bill.setDescription("Test bill");
 
-        event.setBills(new ArrayList<>(Arrays.asList(bill)));
+        event.setBills(new ArrayList<>(Collections.singletonList(bill)));
 
         assertEquals(1L, event.getBills().size());
         bill.setTitle("this is a test");

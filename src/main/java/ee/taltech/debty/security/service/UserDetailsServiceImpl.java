@@ -9,10 +9,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -24,12 +24,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) {
-        Person person = personRepository.findByEmail(email);
+        Optional<Person> personOptional = personRepository.findByEmail(email);
 
-        if (person == null) throw new UsernameNotFoundException("");
-
+        if (!personOptional.isPresent()) throw new UsernameNotFoundException("");
+        Person person = personOptional.get();
         return new org.springframework.security.core.userdetails.User(person.getEmail(), person.getPassword(),
                 new HashSet<GrantedAuthority>(Collections.singletonList(new SimpleGrantedAuthority("USER"))));
     }

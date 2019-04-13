@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockCookie;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -72,7 +71,7 @@ public class UserControllerTest {
 
         userController.logoutDo(request);
 
-        verify(userController).clearSecurityContext();
+        verify(securityService).clearSecurityContext();
         verify(request).getSession(false);
         verify(session).invalidate();
         verify(cookie).setMaxAge(0);

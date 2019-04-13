@@ -8,10 +8,11 @@ import ee.taltech.debty.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static java.time.LocalDateTime.now;
 
 @Service
 @RequiredArgsConstructor
@@ -24,11 +25,8 @@ public class EventService {
     private final DebtDistributionService debtDistributionService;
 
     public Event saveEvent(Event event) {
+        event.setModifiedAt(now());
         return eventRepository.save(event);
-    }
-
-    public List<Event> getAllEvents() {
-        return eventRepository.findAll();
     }
 
     public Optional<Event> getEventById(Long id) {
@@ -58,7 +56,7 @@ public class EventService {
         Event event = getEventById(id).orElseGet(Event::new);
         if (event.getOwner() != null && event.getOwner().getEmail().equals(email)) {
             List<Debt> distributedDebts = calculateDistributedDebts(id);
-            event.setClosedAt(LocalDateTime.now());
+            event.setClosedAt(now());
             if (distributedDebts != null) {
                 debtService.saveDebts(distributedDebts);
             }
@@ -72,6 +70,8 @@ public class EventService {
         if (!eventOptional.isPresent()) return null;
 
         Event event = eventOptional.get();
+        bill.setModifiedAt(now());
+        event.setModifiedAt(now());
         event.getBills().add(bill);
         return saveEvent(event);
     }
@@ -89,6 +89,7 @@ public class EventService {
         if (billOptional.isPresent()) {
             Bill b = billOptional.get();
             event.getBills().remove(b);
+            event.setModifiedAt(now());
         }
         return Optional.of(event);
     }

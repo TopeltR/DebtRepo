@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,20 +44,20 @@ public class ContactService {
         return availableContacts;
     }
 
-    public void acceptContact(Long personId1, Long personId2) {
+    public Contact addNewContact(Long personId1, Long personId2) {
         Optional<Person> personOptional1 = userService.getUserById(personId1);
         Optional<Person> personOptional2 = userService.getUserById(personId2);
         if (personOptional1.isPresent() && personOptional2.isPresent()) {
             Contact contact = createContact(personOptional1.get(), personOptional2.get());
-            contactRepository.save(contact);
+            return contactRepository.save(contact);
         }
+        return null;
     }
 
     private Contact createContact(Person person1, Person person2) {
         Contact contact = new Contact();
         contact.setFrom(person1);
         contact.setTo(person2);
-        contact.setAccepted(false);
         return contact;
     }
 
@@ -71,10 +72,12 @@ public class ContactService {
         Optional<Person> fromPerson = userService.getUserById(fromId);
 
         if (toPerson.isPresent() && fromPerson.isPresent()) {
-            Optional<Contact> contact = contactRepository.findByFromAndTo(fromPerson.get(), toPerson.get());
-            if (contact.isPresent()) {
-                contact.get().setAccepted(true);
-                contactRepository.save(contact.get());
+            Optional<Contact> contactOptional = contactRepository.findByFromAndTo(fromPerson.get(), toPerson.get());
+            if (contactOptional.isPresent()) {
+                Contact contact = contactOptional.get();
+                contact.setAccepted(true);
+                contact.setModifiedAt(LocalDateTime.now());
+                contactRepository.save(contact);
             }
         }
     }
@@ -112,8 +115,7 @@ public class ContactService {
         Optional<Person> fromPerson = userService.getUserById(fromId);
         Optional<Person> toPerson = userService.getUserById(toId);
         if (fromPerson.isPresent() && toPerson.isPresent()) {
-            contactRepository.removeByFromAndTo(fromPerson.get(), toPerson.get());
-            contactRepository.removeByFromAndTo(toPerson.get(), fromPerson.get());
+            contactRepository.deleteByFromAndTo(fromPerson.get(), toPerson.get());
         }
     }
 }

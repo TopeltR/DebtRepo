@@ -41,7 +41,7 @@ public class UserServiceTest {
     public void setParamsFromDto_withEmailChange_shouldChangePersonEmail() {
         PersonDto personDto = new PersonDto();
         personDto.setEmail("bob@builer.com");
-        when(personRepository.findByEmail("bob@builer.com")).thenReturn(person);
+        when(personRepository.findByEmail("bob@builer.com")).thenReturn(Optional.of(person));
         userService.setParamsFromDto(person, personDto);
         assertEquals("bob@builer.com", personDto.getEmail());
     }
@@ -92,7 +92,7 @@ public class UserServiceTest {
 
     @Test
     public void getUserByEmail_shouldReturnUser() {
-        when(personRepository.findByEmail("bob@builer.com")).thenReturn(person);
+        when(personRepository.findByEmail("bob@builer.com")).thenReturn(Optional.of(person));
         userService.getUserByEmail("bob@builer.com");
         verify(personRepository).findByEmail("bob@builer.com");
     }
@@ -106,7 +106,7 @@ public class UserServiceTest {
 
     @Test
     public void emailExists_withExistingPerson_shouldReturnTrue() {
-        when(personRepository.findByEmail("bob@builder.com")).thenReturn(person);
+        when(personRepository.findByEmail("bob@builder.com")).thenReturn(Optional.of(person));
         assertTrue(userService.emailExists("bob@builder.com"));
         verify(personRepository).findByEmail("bob@builder.com");
     }

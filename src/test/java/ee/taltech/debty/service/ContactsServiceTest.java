@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.*;
@@ -17,18 +18,20 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ContactsServiceTest {
+
     @Mock
     private ContactRepository contactRepository;
+
     @Mock
     private UserService userService;
+
+    @Spy
     @InjectMocks
     private ContactService contactService;
 
-    private Person person1 = Person.builder().firstName("Ingmar").lastName("Liibert").email("ingmar@liibert").id(1L).build();
-    private Person person2 = Person.builder().firstName("Liine").lastName("Kasak").email("liine@kasak.ee").id(2L).build();
-    private Person person3 = Person.builder().firstName("Rasmus").lastName("Rüngenen").email("rasmus@rungenen.ee").id(3L).build();
-
-    List<Person> persons = Arrays.asList(person1, person2, person3);
+    private Person person1 = Person.builder().id(1L).firstName("Ingmar").lastName("Liibert").email("ingmar@liibert").build();
+    private Person person2 = Person.builder().id(2L).firstName("Liine").lastName("Kasak").email("liine@kasak.ee").build();
+    private Person person3 = Person.builder().id(3L).firstName("Rasmus").lastName("Rüngenen").email("rasmus@rungenen.ee").build();
 
     @Test
     public void getAllAvailableContacts_shouldReturnAllContacts() {
@@ -36,19 +39,20 @@ public class ContactsServiceTest {
         when(contactRepository.findAllByTo(person1)).thenReturn(Collections.emptyList());
         when(contactRepository.findAllByFrom(person1)).thenReturn(Collections.emptyList());
 
-        assertEquals(Arrays.asList(person2,person3), contactService.getAllAvailableContacts(person1));
+        assertEquals(Arrays.asList(person2, person3), contactService.getAllAvailableContacts(person1));
     }
 
     @Test
-    public void addContact_withPeopleExisting_shouldCallContactRepositorySave() {
+    public void addNewContact_withPeopleExisting_shouldCallContactRepositorySave() {
         when(userService.getUserById(1L)).thenReturn(Optional.of(person1));
         when(userService.getUserById(2L)).thenReturn(Optional.of(person2));
-
         Contact contact = Contact.builder().from(person1).to(person2).isAccepted(false).build();
+        when(contactRepository.save(any())).thenReturn(contact);
 
-        contactService.acceptContact(1L, 2L);
+        contact = contactService.addNewContact(1L, 2L);
 
-        verify(contactRepository).save(contact);
+        assertEquals(contact.getFrom().getId(), person1.getId());
+        assertEquals(contact.getTo().getId(), person2.getId());
     }
 
     @Test
@@ -56,11 +60,9 @@ public class ContactsServiceTest {
         when(userService.getUserById(1L)).thenReturn(Optional.empty());
         when(userService.getUserById(2L)).thenReturn(Optional.empty());
 
-        Contact contact = Contact.builder().from(person1).to(person2).isAccepted(false).build();
+        contactService.addNewContact(1L, 2L);
 
-        contactService.acceptContact(1L, 2L);
-
-        verify(contactRepository, never()).save(contact);
+        verify(contactRepository, never()).save(any());
     }
 
 
@@ -142,7 +144,7 @@ public class ContactsServiceTest {
 
         contactService.removeContactById(1L, 3L);
 
-        verify(contactRepository, never()).removeContactByFrom(any());
-        verify(contactRepository, never()).removeContactByTo(any());
+        verify(contactRepository, never()).deleteByFrom(any());
+        verify(contactRepository, never()).deleteByTo(any());
     }
 }
