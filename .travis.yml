@@ -10,18 +10,8 @@ branches:
   only:
     - master
 before_install:
-  - chmod +x gradlew
-  - chmod +x gradle/wrapper/gradle-wrapper.jar
 script:
   - ./gradlew test build
-before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-cache:
-  directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-
 after_success:
   - test $TRAVIS_BRANCH = "master" && rsync -chavzP --rsh="sshpass -p $FTP_PASSWD ssh -o StrictHostKeyChecking=no -l $FTP_USER" build/libs/debty-0.0.1-SNAPSHOT.jar $FTP_USER@3.93.154.97:/home/ubuntu
 
