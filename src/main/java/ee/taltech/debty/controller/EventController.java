@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
@@ -18,9 +19,9 @@ public class EventController {
 
     private final EventService eventService;
 
-    @PostMapping("/")
+    @PostMapping("")
     @PreAuthorize("@permissionEvaluator.isUserByEmail(#event.owner.email)")
-    public Event addEvent(@RequestBody Event event) {
+    public Event addEvent(@Valid @RequestBody Event event) {
         return eventService.saveEvent(event);
     }
 

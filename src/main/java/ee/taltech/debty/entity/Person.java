@@ -3,6 +3,7 @@ package ee.taltech.debty.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -31,10 +32,8 @@ public class Person {
     private LocalDateTime created = LocalDateTime.now();
     private LocalDateTime modifiedAt;
 
+    @Valid
     @Embedded
     private BankAccount bankAccount;
-    @OneToMany
-    private List<Event> events;
-
 }
 

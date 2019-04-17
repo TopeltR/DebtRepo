@@ -26,7 +26,8 @@ public class EventService {
 
     public Event saveEvent(Event event) {
         event.setModifiedAt(now());
-        return eventRepository.save(event);
+        event = eventRepository.save(event);
+        return event;
     }
 
     public Optional<Event> getEventById(Long id) {
