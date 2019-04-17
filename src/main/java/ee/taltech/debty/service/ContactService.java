@@ -64,7 +64,19 @@ public class ContactService {
     public List<Contact> getAllContacts(Person person) {
         List<Contact> contacts = contactRepository.findAllByFromOrTo(person, person);
         return contacts.stream().filter(Contact::isAccepted).collect(Collectors.toList());
+    }
 
+    public List<Person> getAllContactsAsPeople(Person person) {
+        List<Contact> contacts = contactRepository.findAllByFromOrTo(person, person);
+        contacts = contacts.stream().filter(Contact::isAccepted).collect(Collectors.toList());
+
+        List<Person> contactUsers = contacts.stream()
+                .filter(contact -> contact.getTo().getId().equals(person.getId()))
+                .map(Contact::getFrom).collect(Collectors.toList());
+        contactUsers.addAll(contacts.stream()
+                .filter(contact -> contact.getFrom().getId().equals(person.getId()))
+                .map(Contact::getTo).collect(Collectors.toList()));
+        return contactUsers;
     }
 
     public void acceptContactForPersonFromPerson(Long toId, Long fromId) {

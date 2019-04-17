@@ -53,6 +53,15 @@ public class ContactController {
         return contactService.getAllContacts(person);
     }
 
+    @GetMapping("/{userId}/users")
+    @PreAuthorize("@permissionEvaluator.isUserById(#userId)")
+    public List<Person> getAllUserContactsAsPeople(@PathVariable("userId") Long userId) {
+        Optional<Person> personOptional = userService.getUserById(userId);
+        Person person = new Person();
+        if (personOptional.isPresent()) person = personOptional.get();
+        return contactService.getAllContactsAsPeople(person);
+    }
+
     @GetMapping("/incoming/{userId}")
     @PreAuthorize("@permissionEvaluator.isUserById(#userId)")
     public List<Person> getAllIncomingContacts(@PathVariable("userId") Long userId) {
