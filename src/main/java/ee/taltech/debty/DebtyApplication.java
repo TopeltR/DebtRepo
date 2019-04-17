@@ -1,11 +1,7 @@
 package ee.taltech.debty;
 
 
-import ee.taltech.debty.entity.*;
-import ee.taltech.debty.model.DebtStatus;
-import ee.taltech.debty.repository.DebtRepository;
-import ee.taltech.debty.repository.EventRepository;
-import ee.taltech.debty.repository.PersonRepository;
+import ee.taltech.debty.repository.*;
 import ee.taltech.debty.service.ContactService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
@@ -16,12 +12,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.transaction.Transactional;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @EnableJpaRepositories
 @SpringBootApplication
@@ -29,9 +19,14 @@ import java.util.List;
 public class DebtyApplication {
 
     private final PasswordEncoder passwordEncoder;
-    private final PersonRepository personRepository;
-    private final EventRepository eventRepository;
+
+    private final BillPaymentRepository billPaymentRepository;
+    private final BillRepository billRepository;
+    private final ContactRepository contactRepository;
     private final DebtRepository debtRepository;
+    private final EventRepository eventRepository;
+    private final PersonRepository personRepository;
+
     private final ContactService contactService;
 
     public static void main(String[] args) {
@@ -41,6 +36,13 @@ public class DebtyApplication {
     @Transactional
     @EventListener(ApplicationReadyEvent.class)
     public void onStartup() {
+        /*billPaymentRepository.deleteAll();
+        billRepository.deleteAll();
+        contactRepository.deleteAll();
+        debtRepository.deleteAll();
+        eventRepository.deleteAll();
+        personRepository.deleteAll();
+
         Person person = new Person();
         person.setFirstName("Ingmar");
         person.setLastName("Liibert");
@@ -221,6 +223,6 @@ public class DebtyApplication {
         contactService.acceptContactForPersonFromPerson(person.getId(), person2.getId());
 
         contactService.addNewContact(person1.getId(), person2.getId());
-        contactService.acceptContactForPersonFromPerson(person2.getId(), person1.getId());
+        contactService.acceptContactForPersonFromPerson(person2.getId(), person1.getId());*/
     }
 }
