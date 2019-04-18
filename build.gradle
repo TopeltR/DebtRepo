@@ -19,6 +19,12 @@ test {
 	useJUnitPlatform()
 }
 
+task uploadApi(type:Exec) {
+	commandLine 'cmd', 'cd'
+	commandLine 'cmd', './gradlew test bootJar'
+	//commandLine './upload-backend.sh'
+}
+
 group = 'ee.taltech'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
@@ -26,6 +32,7 @@ sourceCompatibility = '1.8'
 repositories {
 	mavenCentral()
 }
+
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
