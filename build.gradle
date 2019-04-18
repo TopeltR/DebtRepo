@@ -19,10 +19,11 @@ test {
 	useJUnitPlatform()
 }
 
-task uploadApi(type:Exec) {
-	commandLine 'cmd', 'cd'
-	commandLine 'cmd', './gradlew test bootJar'
-	//commandLine './upload-backend.sh'
+task uploadApi(type: Exec) {
+	// dependsOn test
+	dependsOn build
+	dependsOn bootJar
+	commandLine './upload-backend.sh'
 }
 
 group = 'ee.taltech'
