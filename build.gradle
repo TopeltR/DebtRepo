@@ -26,6 +26,10 @@ task uploadApi(type: Exec) {
 	commandLine './upload-backend.sh'
 }
 
+task uploadFront(type: Exec) {
+	commandLine './upload-frontend.sh'
+}
+
 group = 'ee.taltech'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
