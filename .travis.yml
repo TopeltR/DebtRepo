@@ -14,4 +14,4 @@ script:
   - ./gradlew test build
   - pwd
 after_success:  
-  - rsync -PazSHAX --rsh "ssh -o UserKnownHostsFile=/dev/null -i "aws.pem" --rsync-path "sudo rsync" build/libs/debty-0.0.1-SNAPSHOT.jar ubuntu@3.93.154.97:/home/ubuntu
+  - rsync -PazSHAX --rsh "ssh -o UserKnownHostsFile=/dev/null -i "aws.pem" build/libs/debty-0.0.1-SNAPSHOT.jar ubuntu@3.93.154.97:/home/ubuntu
