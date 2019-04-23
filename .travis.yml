@@ -13,5 +13,6 @@ before_install:
 script:
   - ./gradlew test build
 after_success:
-  - test $TRAVIS_BRANCH = "master" && rsync -chavzP --rsh="sshpass -p $FTP_PASSWD ssh -o StrictHostKeyChecking=no -l $FTP_USER" build/libs/debty-0.0.1-SNAPSHOT.jar $FTP_USER@3.93.154.97:/home/ubuntu
+  cat $FTP_AWS >> aws.pem
+  - test $TRAVIS_BRANCH = "master" && rsync -chavzP --rsh="sshpass -i ~/aws.pem -p $FTP_PASSWD ssh -o StrictHostKeyChecking=no -l $FTP_USER" build/libs/debty-0.0.1-SNAPSHOT.jar $FTP_USER@3.93.154.97:/home/ubuntu
 
