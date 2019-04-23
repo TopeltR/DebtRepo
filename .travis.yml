@@ -11,7 +11,7 @@ branches:
     - master
 before_install:
 script:
-  - ./gradlew test build
+  - ./gradlew test bootJar
   - pwd
 after_success:  
   - chmod 400 aws.pem
