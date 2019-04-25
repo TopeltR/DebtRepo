@@ -3,12 +3,11 @@ package ee.taltech.debty.service;
 import ee.taltech.debty.entity.Bill;
 import ee.taltech.debty.entity.Debt;
 import ee.taltech.debty.entity.Event;
-import ee.taltech.debty.entity.Person;
 import ee.taltech.debty.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,9 +39,8 @@ public class EventService {
     }
 
     public List<Event> getAllEventsByUserId(Long userId) {
-        Optional<Person> userOptional = userService.getUserById(userId);
-        if (userOptional.isPresent()) return eventRepository.findAllByPeopleContaining(userOptional.get());
-        else return new ArrayList<>();
+        return userService.getUserById(userId)
+                .map(eventRepository::findAllByPeopleContaining).orElse(Collections.emptyList());
     }
 
     public List<Debt> calculateDistributedDebts(Long eventId) {
@@ -67,14 +65,12 @@ public class EventService {
     }
 
     public Event addOrUpdateBill(Long eventId, Bill bill) {
-        Optional<Event> eventOptional = removeBillFromEvent(eventId, bill.getId());
-        if (!eventOptional.isPresent()) return null;
-
-        Event event = eventOptional.get();
-        bill.setModifiedAt(now());
-        event.setModifiedAt(now());
-        event.getBills().add(bill);
-        return saveEvent(event);
+        return removeBillFromEvent(eventId, bill.getId()).map(event -> {
+            bill.setModifiedAt(now());
+            event.setModifiedAt(now());
+            event.getBills().add(bill);
+            return saveEvent(event);
+        }).orElse(null);
     }
 
     public void deleteBillFromEvent(Long eventId, Long billId) {
@@ -83,15 +79,14 @@ public class EventService {
     }
 
     private Optional<Event> removeBillFromEvent(Long eventId, Long billId) {
-        Optional<Event> eventById = getEventById(eventId);
-        if (!eventById.isPresent()) return Optional.empty();
-        Event event = eventById.get();
-        Optional<Bill> billOptional = event.getBills().stream().filter(b -> b.getId().equals(billId)).findFirst();
-        if (billOptional.isPresent()) {
-            Bill b = billOptional.get();
-            event.getBills().remove(b);
-            event.setModifiedAt(now());
-        }
-        return Optional.of(event);
+        return getEventById(eventId).map(event -> {
+            Optional<Bill> billOptional = event.getBills().stream().filter(b -> b.getId().equals(billId)).findFirst();
+            billOptional.ifPresent(bill -> {
+                Bill b = billOptional.get();
+                event.getBills().remove(b);
+                event.setModifiedAt(now());
+            });
+            return Optional.of(event);
+        }).orElse(Optional.empty());
     }
 }

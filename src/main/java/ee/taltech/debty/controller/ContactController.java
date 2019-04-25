@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,18 +49,14 @@ public class ContactController {
     @PreAuthorize("@permissionEvaluator.isUserById(#userId)")
     public List<Contact> getAllUserContacts(@PathVariable("userId") Long userId) {
         Optional<Person> personOptional = userService.getUserById(userId);
-        Person person = new Person();
-        if (personOptional.isPresent()) person = personOptional.get();
-        return contactService.getAllContacts(person);
+        return personOptional.map(contactService::getAllContacts).orElse(Collections.emptyList());
     }
 
     @GetMapping("/{userId}/users")
     @PreAuthorize("@permissionEvaluator.isUserById(#userId)")
     public List<Person> getAllUserContactsAsPeople(@PathVariable("userId") Long userId) {
         Optional<Person> personOptional = userService.getUserById(userId);
-        Person person = new Person();
-        if (personOptional.isPresent()) person = personOptional.get();
-        return contactService.getAllContactsAsPeople(person);
+        return personOptional.map(contactService::getAllContactsAsPeople).orElse(Collections.emptyList());
     }
 
     @GetMapping("/incoming/{userId}")

@@ -1,7 +1,6 @@
 package ee.taltech.debty.service;
 
 import ee.taltech.debty.entity.Debt;
-import ee.taltech.debty.entity.Person;
 import ee.taltech.debty.model.DebtStatus;
 import ee.taltech.debty.repository.DebtRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,9 +39,8 @@ public class DebtService {
     }
 
     public List<Debt> getAllDebtsByUserId(Long userId) {
-        Optional<Person> userOptional = userService.getUserById(userId);
-        if (userOptional.isPresent()) return debtRepository.findAllByPersonParticipating(userOptional.get());
-        else return new ArrayList<>();
+        return userService.getUserById(userId)
+                .map(debtRepository::findAllByPersonParticipating).orElse(Collections.emptyList());
     }
 
     public void deleteDebt(Long id) {

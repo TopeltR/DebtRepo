@@ -65,22 +65,20 @@ public class UserService {
 
     public void addBankAccountForUser(BankAccount bankAccount, Long personId) {
         Optional<Person> personOptional = personRepository.findById(personId);
-        if (!personOptional.isPresent()) return;
-        Person person = personOptional.get();
+        personOptional.ifPresent(person -> {
+            bankAccount.setModified(LocalDateTime.now());
 
-        bankAccount.setModified(LocalDateTime.now());
+            person.setModifiedAt(LocalDateTime.now());
+            person.setBankAccount(bankAccount);
+            personRepository.save(person);
 
-        person.setModifiedAt(LocalDateTime.now());
-        person.setBankAccount(bankAccount);
-        personRepository.save(person);
+        });
     }
 
     public Person updateUser(PersonDto personDto) {
-        Optional<Person> personOptional = getUserById(personDto.getId());
-        if (!personOptional.isPresent()) return null;
-
-        Person person = personOptional.get();
-        setParamsFromDto(person, personDto);
-        return personRepository.save(person);
+        return getUserById(personDto.getId()).map(person -> {
+            setParamsFromDto(person, personDto);
+            return personRepository.save(person);
+        }).orElse(null);
     }
 }

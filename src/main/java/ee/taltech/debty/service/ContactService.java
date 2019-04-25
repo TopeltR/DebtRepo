@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,11 +48,9 @@ public class ContactService {
     public Contact addNewContact(Long personId1, Long personId2) {
         Optional<Person> personOptional1 = userService.getUserById(personId1);
         Optional<Person> personOptional2 = userService.getUserById(personId2);
-        if (personOptional1.isPresent() && personOptional2.isPresent()) {
-            Contact contact = createContact(personOptional1.get(), personOptional2.get());
-            return contactRepository.save(contact);
-        }
-        return null;
+        return personOptional1.map(person1 -> personOptional2
+                .map(person2 -> contactRepository.save(createContact(person1, person2)))
+                .orElse(null)).orElse(null);
     }
 
     private Contact createContact(Person person1, Person person2) {
@@ -80,54 +79,44 @@ public class ContactService {
     }
 
     public void acceptContactForPersonFromPerson(Long toId, Long fromId) {
-        Optional<Person> toPerson = userService.getUserById(toId);
-        Optional<Person> fromPerson = userService.getUserById(fromId);
+        Optional<Person> toPersonOptional = userService.getUserById(toId);
+        Optional<Person> fromPersonOptional = userService.getUserById(fromId);
 
-        if (toPerson.isPresent() && fromPerson.isPresent()) {
-            Optional<Contact> contactOptional = contactRepository.findByFromAndTo(fromPerson.get(), toPerson.get());
-            if (contactOptional.isPresent()) {
-                Contact contact = contactOptional.get();
-                contact.setAccepted(true);
-                contact.setModifiedAt(LocalDateTime.now());
-                contactRepository.save(contact);
-            }
-        }
+        toPersonOptional.ifPresent(toPerson -> fromPersonOptional.ifPresent(fromPerson ->
+                contactRepository.findByFromAndTo(fromPersonOptional.get(), toPersonOptional.get())
+                        .ifPresent(contact -> {
+                            contact.setAccepted(true);
+                            contact.setModifiedAt(LocalDateTime.now());
+                            contactRepository.save(contact);
+                        })
+        ));
     }
 
     public List<Person> getIncomingRequests(Long id) {
-        Optional<Person> person = userService.getUserById(id);
-        List<Contact> contacts;
-        if (person.isPresent()) {
-            contacts = contactRepository.findAllByTo(person.get());
-            return contacts
-                    .stream()
-                    .filter(i -> !i.isAccepted())
-                    .map(Contact::getFrom)
-                    .collect(Collectors.toList());
-        }
-        return new ArrayList<>();
+        return userService.getUserById(id).map(person ->
+                contactRepository.findAllByTo(person)
+                        .stream()
+                        .filter(i -> !i.isAccepted())
+                        .map(Contact::getFrom)
+                        .collect(Collectors.toList())
+        ).orElse(Collections.emptyList());
     }
 
     public List<Person> getOutgoingRequests(Long id) {
-        Optional<Person> person = userService.getUserById(id);
-        List<Contact> contacts;
-        if (person.isPresent()) {
-            contacts = contactRepository.findAllByFrom(person.get());
-            return contacts
-                    .stream()
-                    .filter(i -> !i.isAccepted())
-                    .map(Contact::getTo)
-                    .collect(Collectors.toList());
-        }
-        return new ArrayList<>();
+        return userService.getUserById(id).map(person ->
+                contactRepository.findAllByFrom(person)
+                        .stream()
+                        .filter(i -> !i.isAccepted())
+                        .map(Contact::getTo)
+                        .collect(Collectors.toList())).orElse(Collections.emptyList());
     }
 
     @Transactional
     public void removeContactById(Long fromId, Long toId) {
-        Optional<Person> fromPerson = userService.getUserById(fromId);
-        Optional<Person> toPerson = userService.getUserById(toId);
-        if (fromPerson.isPresent() && toPerson.isPresent()) {
-            contactRepository.deleteByFromAndTo(fromPerson.get(), toPerson.get());
-        }
+        Optional<Person> fromPersonOptional = userService.getUserById(fromId);
+        Optional<Person> toPersonOptional = userService.getUserById(toId);
+
+        fromPersonOptional.ifPresent(fromPerson -> toPersonOptional.ifPresent(toPerson ->
+                contactRepository.deleteByFromAndTo(fromPerson, toPerson)));
     }
 }
