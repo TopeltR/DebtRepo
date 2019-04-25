@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -31,15 +32,15 @@ public class Debt {
     @Builder.Default
     private Currency currency = Currency.getInstance("EUR");
 
-    @NotNull
+    @Valid
     @ManyToOne
     private Person payer;
 
-    @NotNull
+    @Valid
     @ManyToOne
     private Person receiver;
 
-    @NotNull
+    @Valid
     @ManyToOne
     private Person owner;
 

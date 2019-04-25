@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -23,14 +24,14 @@ public class Bill {
     private Long id;
     @NotNull
     private String title;
-    @NotNull
+    @Valid
     @ManyToOne
     private Person creator;
     @NotNull
     private BigDecimal sum;
     @NotNull
     private Currency currency = Currency.getInstance("EUR");
-    @NotNull
+    @Valid
     @ManyToOne
     private Person buyer;
 
@@ -38,10 +39,10 @@ public class Bill {
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime modifiedAt;
 
-    @NotNull
+    @Valid
     @ManyToMany
     private List<Person> people;
-    @NotNull
+    @Valid
     @ManyToMany(cascade = CascadeType.ALL)
     private List<BillPayment> billPayments;
 }

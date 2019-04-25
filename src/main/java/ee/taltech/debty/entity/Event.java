@@ -30,8 +30,10 @@ public class Event {
 
     private String description;
 
+    @Valid
     @OneToMany(cascade = CascadeType.ALL)
     private List<Bill> bills = new ArrayList<>();
+    @Valid
     @ManyToMany
     private List<Person> people;
 

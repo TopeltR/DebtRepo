@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 
 @Data
@@ -20,11 +20,11 @@ public class Contact {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @Valid
     @ManyToOne
     private Person from;
 
-    @NotNull
+    @Valid
     @ManyToOne
     private Person to;
 
