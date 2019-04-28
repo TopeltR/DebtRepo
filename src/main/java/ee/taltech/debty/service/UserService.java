@@ -51,7 +51,7 @@ public class UserService {
         return personRepository.findByEmail(email);
     }
 
-    public List<Person> getAllUsers() {
+    List<Person> getAllUsers() {
         return personRepository.findAll();
     }
 
@@ -63,16 +63,15 @@ public class UserService {
         return personRepository.findByEmail(email).isPresent();
     }
 
-    public void addBankAccountForUser(BankAccount bankAccount, Long personId) {
+    public Person addBankAccountForUser(BankAccount bankAccount, Long personId) {
         Optional<Person> personOptional = personRepository.findById(personId);
-        personOptional.ifPresent(person -> {
+        return personOptional.map(person -> {
             bankAccount.setModified(LocalDateTime.now());
 
             person.setModifiedAt(LocalDateTime.now());
             person.setBankAccount(bankAccount);
-            personRepository.save(person);
-
-        });
+            return personRepository.save(person);
+        }).orElse(null);
     }
 
     public Person updateUser(PersonDto personDto) {

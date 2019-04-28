@@ -63,10 +63,10 @@ public class UserController {
         return userService.updateUser(user);
     }
 
-    @PostMapping("/bankAccount/{id}")
+    @PostMapping("/{id}/bankAccount")
     @PreAuthorize("@permissionEvaluator.isUserById(#id)")
-    public void addBankAccountForUser(@PathVariable("id") Long id, @RequestBody BankAccount bankAccount) {
-        userService.addBankAccountForUser(bankAccount, id);
+    public Person addBankAccountForUser(@PathVariable("id") Long id, @RequestBody BankAccount bankAccount) {
+        return userService.addBankAccountForUser(bankAccount, id);
     }
 
     @PostMapping("/signout")
