@@ -53,4 +53,18 @@ public class PermissionEvaluator {
     public boolean isInEventPeople(Long eventId) {
         return eventService.getEventById(eventId).map(event -> isInList(event.getPeople())).orElse(false);
     }
+
+    public boolean isNotDebtOwner(Long debtId) {
+        return debtService.getDebtById(debtId).map(debt ->
+                isUserByEmail((debt.getOwner() == debt.getPayer() ? debt.getReceiver() : debt.getPayer())
+                        .getEmail())).orElse(false);
+    }
+
+    public boolean isDebtPayer(Long debtId) {
+        return debtService.getDebtById(debtId).map(debt -> isUserByEmail(debt.getPayer().getEmail())).orElse(false);
+    }
+
+    public boolean isDebtReceiver(Long debtId) {
+        return debtService.getDebtById(debtId).map(debt -> isUserByEmail(debt.getReceiver().getEmail())).orElse(false);
+    }
 }

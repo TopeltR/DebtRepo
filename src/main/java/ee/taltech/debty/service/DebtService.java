@@ -59,4 +59,25 @@ public class DebtService {
         }
         return sum;
     }
+
+    public Debt acceptDeclineDebt(Long debtId, boolean isAccept) {
+        return getDebtById(debtId).map(debt -> {
+            debt.setStatus(isAccept ? DebtStatus.ACCEPTED : DebtStatus.DECLINED);
+            return saveDebt(debt);
+        }).orElse(null);
+    }
+
+    public Debt payDebt(Long debtId) {
+        return getDebtById(debtId).map(debt -> {
+            debt.setStatus(DebtStatus.PAID);
+            return saveDebt(debt);
+        }).orElse(null);
+    }
+
+    public Debt confirmDebt(Long debtId) {
+        return getDebtById(debtId).map(debt -> {
+            debt.setStatus(DebtStatus.CONFIRMED);
+            return saveDebt(debt);
+        }).orElse(null);
+    }
 }

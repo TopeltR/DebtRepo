@@ -16,7 +16,7 @@ public class DebtController {
 
     private final DebtService debtService;
 
-    @PostMapping("/")
+    @PostMapping("")
     @PreAuthorize("@permissionEvaluator.isUserByEmail(#debt.owner.email)")
     public Debt saveDebt(@RequestBody Debt debt) {
         return debtService.saveDebt(debt);
@@ -44,5 +44,23 @@ public class DebtController {
     @PreAuthorize("@permissionEvaluator.isUserById(#userId)")
     public BigDecimal getTotalDebtBalance(@PathVariable("userId") Long userId) {
         return debtService.getTotalDebtBalanceForUser(userId);
+    }
+
+    @PutMapping("/{id}/accept/{isAccept}")
+    @PreAuthorize("@permissionEvaluator.isNotDebtOwner(#id)")
+    public Debt acceptDeclineDebt(@PathVariable("id") Long id, @PathVariable("isAccept") boolean isAccept) {
+        return debtService.acceptDeclineDebt(id, isAccept);
+    }
+
+    @PutMapping("/{id}/pay")
+    @PreAuthorize("@permissionEvaluator.isDebtPayer(#id)")
+    public Debt payDebt(@PathVariable("id") Long id) {
+        return debtService.payDebt(id);
+    }
+
+    @PutMapping("/{id}/confirm")
+    @PreAuthorize("@permissionEvaluator.isDebtReceiver(#id)")
+    public Debt confirmDebt(@PathVariable("id") Long id) {
+        return debtService.confirmDebt(id);
     }
 }
