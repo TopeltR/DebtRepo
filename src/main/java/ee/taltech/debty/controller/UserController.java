@@ -57,7 +57,7 @@ public class UserController {
         return userService.getUserById(id).orElseGet(Person::new);
     }
 
-    @PutMapping("/")
+    @PutMapping("")
     @PreAuthorize("@permissionEvaluator.isUserById(#user.id)")
     public Person updateUser(@RequestBody PersonDto user) {
         return userService.updateUser(user);
