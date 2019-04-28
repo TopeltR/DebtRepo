@@ -9,11 +9,9 @@ dist: trusty
 branches:
   only:
     - master
-before_install:
 script:
   - ./gradlew test bootJar
   - pwd
 after_success:  
-  - chmod 400 aws.pem
-  - rsync -PazSHAX --rsh "ssh -o StrictHostKeyChecking=no -p $FPT_PWD" build/libs/debty-0.0.1-SNAPSHOT.jar $FTP_USER@$FTP_ADDR:/home/ubuntu
-  - ssh -p $FTP_PWD -o StrictHostKeyChecking=no $FTP_USER@$FTP_ADDR  'pwd; java -jar debty-0.0.1-SNAPSHOT.jar &' 
+  - rsync -PazSHAX --rsh="sshpass -p $FTP_PWD ssh -o StrictHostKeyChecking=no -l $FTP_USER" build/libs/debty-0.0.1-SNAPSHOT.jar $FTP_ADDR:/home/travis
+  - ./upload-backend.sh
