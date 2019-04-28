@@ -14,4 +14,6 @@ script:
   - ./gradlew test bootJar
   - pwd
 after_success:  
-  - ssh -o StrictHostKeyChecking=no $FTP_USER@$FTP_ADDR  'pwd; java -jar debty-0.0.1-SNAPSHOT.jar &' 
+  - cat test >> $FTP_PWD
+  - rsync -PazSHAX --rsh "sshpass -f test -o StrictHostKeyChecking=no build/libs/debty-0.0.1-SNAPSHOT.jar $FTP_USER@$FTP_ADDR:/home/ubuntu
+  - sshpass -f test -o StrictHostKeyChecking=no $FTP_USER@$FTP_ADDR  'pwd; java -jar debty-0.0.1-SNAPSHOT.jar &' 
