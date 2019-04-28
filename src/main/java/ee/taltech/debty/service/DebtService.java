@@ -20,7 +20,6 @@ public class DebtService {
     private final UserService userService;
 
     public Debt saveDebt(Debt debt) {
-        if (debt.getPayer().getId() == null) userService.saveUser(debt.getPayer());
         if (debt.getClosedAt() == null) {
             if (debt.getStatus() == DebtStatus.CONFIRMED || debt.getStatus() == DebtStatus.DECLINED) {
                 debt.setClosedAt(LocalDateTime.now());
