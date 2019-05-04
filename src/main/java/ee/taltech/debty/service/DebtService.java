@@ -48,15 +48,10 @@ public class DebtService {
     }
 
     public BigDecimal getTotalDebtBalanceForUser(Long userId) {
-        BigDecimal sum = BigDecimal.ZERO;
-        for (Debt debt : getAllDebtsByUserId(userId)) {
-            if (userId.equals(debt.getPayer().getId())) {
-                sum = sum.subtract(debt.getSum());
-            } else {
-                sum = sum.add(debt.getSum());
-            }
-        }
-        return sum;
+        return getAllDebtsByUserId(userId).stream()
+                .filter(debt -> debt.getStatus() != DebtStatus.CONFIRMED)
+                .map(debt -> userId.equals(debt.getPayer().getId()) ? debt.getSum().negate() : debt.getSum())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public Debt acceptDeclineDebt(Long debtId, boolean isAccept) {
