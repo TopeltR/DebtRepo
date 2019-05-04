@@ -23,6 +23,8 @@ public class DebtService {
         if (debt.getClosedAt() == null) {
             if (debt.getStatus() == DebtStatus.CONFIRMED || debt.getStatus() == DebtStatus.DECLINED) {
                 debt.setClosedAt(LocalDateTime.now());
+            } else {
+                debt.setClosedAt(null);
             }
         }
         debt.setModifiedAt(LocalDateTime.now());
