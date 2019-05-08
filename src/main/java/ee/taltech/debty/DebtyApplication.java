@@ -66,6 +66,7 @@ public class DebtyApplication {
         Person person3 = new Person();
         person3.setFirstName("Heli");
         person3.setLastName("Kopter");
+        person3.setEmail("heli@kopter.ee");
         person3.setPassword(passwordEncoder.encode("heli"));
 
         Person person4 = new Person();
