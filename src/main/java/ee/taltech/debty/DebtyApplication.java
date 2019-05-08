@@ -37,7 +37,7 @@ public class DebtyApplication {
 
     @PostConstruct
     public void init() {
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC+3"));
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Tallinn"));
     }
 
     @Transactional
