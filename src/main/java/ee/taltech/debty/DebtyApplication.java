@@ -11,7 +11,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
+import java.util.TimeZone;
 
 @EnableJpaRepositories
 @SpringBootApplication
@@ -31,6 +33,11 @@ public class DebtyApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(DebtyApplication.class, args);
+    }
+
+    @PostConstruct
+    public void init() {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC+3"));
     }
 
     @Transactional

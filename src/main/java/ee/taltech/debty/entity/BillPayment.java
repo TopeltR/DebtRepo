@@ -27,5 +27,5 @@ public class BillPayment {
     private BigDecimal sum;
 
     private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime modifiedAt;
+    private LocalDateTime modifiedAt = LocalDateTime.now();
 }

@@ -38,6 +38,6 @@ public class Event {
     private List<Person> people;
 
     private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime modifiedAt;
+    private LocalDateTime modifiedAt = LocalDateTime.now();
     private LocalDateTime closedAt;
 }

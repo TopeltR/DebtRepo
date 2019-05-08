@@ -50,13 +50,14 @@ public class Debt {
 
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime modifiedAt;
+    private LocalDateTime modifiedAt = LocalDateTime.now();
     private LocalDateTime closedAt;
 
     public Debt() {
         this.sum = BigDecimal.ZERO;
         this.status = DebtStatus.NEW;
         this.createdAt = LocalDateTime.now();
+        this.modifiedAt = LocalDateTime.now();
         this.currency = Currency.getInstance("EUR");
     }
 }

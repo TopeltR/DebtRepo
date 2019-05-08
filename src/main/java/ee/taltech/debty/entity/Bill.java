@@ -37,7 +37,7 @@ public class Bill {
 
     private String description;
     private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime modifiedAt;
+    private LocalDateTime modifiedAt = LocalDateTime.now();
 
     @Valid
     @ManyToMany

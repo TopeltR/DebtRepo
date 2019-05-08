@@ -29,7 +29,7 @@ public class Person {
     private String lastName;
 
     private LocalDateTime created = LocalDateTime.now();
-    private LocalDateTime modifiedAt;
+    private LocalDateTime modifiedAt = LocalDateTime.now();
 
     @Valid
     @Embedded

@@ -31,5 +31,5 @@ public class Contact {
     private boolean isAccepted = false;
 
     private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime modifiedAt;
+    private LocalDateTime modifiedAt = LocalDateTime.now();
 }

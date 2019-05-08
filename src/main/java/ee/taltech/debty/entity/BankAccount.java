@@ -14,5 +14,5 @@ public class BankAccount {
     @NotNull
     private String name;
     private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime modified;
+    private LocalDateTime modified = LocalDateTime.now();
 }
