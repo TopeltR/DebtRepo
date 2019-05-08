@@ -51,7 +51,7 @@ public class DebtService {
 
     public BigDecimal getTotalDebtBalanceForUser(Long userId) {
         return getAllDebtsByUserId(userId).stream()
-                .filter(debt -> debt.getStatus() != DebtStatus.CONFIRMED)
+                .filter(debt -> debt.getStatus() != DebtStatus.CONFIRMED && debt.getStatus() != DebtStatus.DECLINED)
                 .map(debt -> userId.equals(debt.getPayer().getId()) ? debt.getSum().negate() : debt.getSum())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
